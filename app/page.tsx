@@ -236,7 +236,7 @@ export default function Home() {
   }, [selectedCategory]);
 
   return (
-    <div className="relative w-full h-screen">
+    <div className="relative w-full h-dvh">
       <div
         className={`absolute bottom-5 left-0 right-0 z-10 transition-transform duration-500 ${
           showCard
