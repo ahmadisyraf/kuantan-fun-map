@@ -15,6 +15,10 @@ export function getIcons(categoryType: CategoryType) {
     return "/icons/castle.png";
   } else if (categoryType === "Landmark") {
     return "/icons/landmark.png";
+  } else if (categoryType === "Zoo") {
+    return "/icons/zoo.png";
+  } else if (categoryType === "Riverfront") {
+    return "/icons/riverfront.png";
   } else {
     return "/icons/unknown.png";
   }

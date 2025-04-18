@@ -131,7 +131,6 @@ export default function Home() {
             },
             properties: {
               name: place.name,
-              address: place.address,
               category: place.category,
             },
           })),
@@ -238,7 +237,7 @@ export default function Home() {
   return (
     <div className="relative w-full h-dvh">
       <div
-        className={`absolute bottom-5 left-0 right-0 z-10 transition-transform duration-500 ${
+        className={`absolute pointer-events-none bottom-5 left-0 right-0 z-10 transition-transform duration-500 ${
           showCard
             ? "translate-y-0"
             : showFilter
@@ -248,7 +247,7 @@ export default function Home() {
       >
         {/* Category Buttons Row (only when filter is on) */}
         {showFilter && (
-          <div className="flex flex-wrap gap-2 px-4 mb-3 w-full max-w-lg">
+          <div className="flex flex-wrap gap-2 px-4 mb-3 w-full max-w-lg pointer-events-auto">
             {categories.map((category, index) => (
               <button
                 key={index}
@@ -266,7 +265,7 @@ export default function Home() {
         )}
 
         {/* Toggle buttons */}
-        <div className="flex flex-row items-center gap-2 px-4 mb-3">
+        <div className="flex flex-row items-center gap-2 px-4 mb-3 pointer-events-auto">
           <button
             onClick={() => setShowCard(!showCard)}
             className="bg-white text-gray-800 shadow-lg border-[1.9px] border-black hover:bg-gray-100 p-2 rounded-full transition-transform active:translate-y-1"
@@ -317,10 +316,18 @@ export default function Home() {
               {showFilter ? "HIDE FILTER" : "SHOW FILTER"}
             </button>
           </div>
+          {selectedCategory && (
+            <button
+              onClick={() => setSelectedCategory(null)}
+              className="text-xs font-bold bg-brand text-black border-[1.9px] border-black px-3 py-2 rounded-full transition-transform active:translate-y-1"
+            >
+              CLEAR FILTER
+            </button>
+          )}
         </div>
 
         {/* Card list */}
-        <div className="flex gap-4 overflow-x-auto px-4 pb-5 pt-5 no-scrollbar pr-6">
+        <div className="flex gap-4 overflow-x-auto px-4 pb-5 pt-5 no-scrollbar pr-6 pointer-events-auto">
           {filterPlacesByCategory(selectedCategory).map((place, index) => (
             <div
               key={index}
