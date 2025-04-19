@@ -8,14 +8,23 @@ import maplibregl, {
   Marker,
 } from "maplibre-gl";
 import { categories, CategoryType, Place, places } from "./data";
-import { getIcons } from "@/lib/get-icons";
+import { getMarkerIcon } from "@/lib/get-marker-icon";
 import { createRoot } from "react-dom/client";
+import { ChevronDown, ChevronUp } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import {
+  Card,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import { ButtonGroup, ButtonGroupItem } from "@/components/ui/button-group";
 
 export default function Home() {
   const mapContainer = useRef<HTMLDivElement | null>(null);
   const mapRef = useRef<Map | null>(null);
   const clusterMarkers = useRef<Marker[]>([]);
-  // const [placesInBbox, setPlacesInBbox] = useState<Place[]>([]);
   const [showCard, setShowCard] = useState<boolean>(true);
   const [selectedPlace, setSelectedPlace] = useState<Place | null>(null);
   const [selectedCategory, setSelectedCategory] = useState<CategoryType | null>(
@@ -75,24 +84,6 @@ export default function Home() {
     });
   };
 
-  // Commenting out the `getPointsInBbox` function for now
-  // function getPointsInBbox(map: Map, places: Place[]): Place[] {
-  //   const bounds = map.getBounds(); // Get the current map bounds
-
-  //   // Filter places based on whether their coordinates are within the bounds
-  //   return places.filter((place) => {
-  //     const [lng, lat] = place.coordinates;
-
-  //     // Check if the place's coordinates fall within the current map bounds
-  //     return (
-  //       lng >= bounds.getWest() &&
-  //       lng <= bounds.getEast() &&
-  //       lat >= bounds.getSouth() &&
-  //       lat <= bounds.getNorth()
-  //     );
-  //   });
-  // }
-
   useEffect(() => {
     if (!mapContainer.current) return;
 
@@ -107,17 +98,19 @@ export default function Home() {
     const map = mapRef.current;
 
     map.on("load", async () => {
-      categories.map(async (category: CategoryType) => {
-        const url = getIcons(category);
-        const response = await fetch(url);
-        const blob = await response.blob();
-        const imageBitmap = await createImageBitmap(blob);
+      await Promise.all(
+        categories.map(async (category: CategoryType) => {
+          const url = getMarkerIcon(category);
+          const response = await fetch(url);
+          const blob = await response.blob();
+          const imageBitmap = await createImageBitmap(blob);
 
-        // Add image if not exist
-        if (!map.hasImage(category)) {
-          map.addImage(category, imageBitmap);
-        }
-      });
+          // Add image if not exist
+          if (!map.hasImage(category)) {
+            map.addImage(category, imageBitmap);
+          }
+        })
+      );
 
       map.addSource("places", {
         type: "geojson",
@@ -173,9 +166,10 @@ export default function Home() {
 
             const index = places.findIndex((p) => p.name === name);
 
-            const cardEl = placeRefs.current[index];
-            if (cardEl) {
-              cardEl.scrollIntoView({
+            const cardElement = placeRefs.current[index];
+
+            if (cardElement) {
+              cardElement.scrollIntoView({
                 behavior: "smooth",
                 inline: "center",
                 block: "nearest",
@@ -210,21 +204,15 @@ export default function Home() {
           e.isSourceLoaded
         ) {
           renderClusterMarkers(map);
-          // Commented out the getPointsInBbox function call for now
-          // setPlacesInBbox(getPointsInBbox(map, placesToRender));
         }
       });
 
       map.on("moveend", () => {
         renderClusterMarkers(map);
-        // Commented out the getPointsInBbox function call for now
-        // setPlacesInBbox(getPointsInBbox(map, placesToRender));
       });
 
       map.on("zoomend", () => {
         renderClusterMarkers(map);
-        // Commented out the getPointsInBbox function call for now
-        // setPlacesInBbox(getPointsInBbox(map, placesToRender));
       });
     });
 
@@ -236,6 +224,11 @@ export default function Home() {
 
   return (
     <div className="relative w-full h-dvh">
+      <img
+        src="/logo/kuantan-fun-map-2.png"
+        className="absolute z-20 w-36 h-36 lg:w-48 lg:h-48 -top-5 lg:-top-12 left-3"
+      />
+
       <div
         className={`absolute pointer-events-none bottom-5 left-0 right-0 z-10 transition-transform duration-500 ${
           showCard
@@ -245,24 +238,23 @@ export default function Home() {
             : "translate-y-3/4"
         }`}
       >
-        {/* Category Buttons Row (only when filter is on) */}
-        {showFilter && (
-          <div className="flex flex-wrap gap-2 px-4 mb-3 w-full max-w-lg pointer-events-auto">
+        <div
+          className={`flex flex-wrap gap-2 px-4 mb-3 w-full max-w-lg pointer-events-auto ${
+            showFilter ? "visible" : "hidden"
+          }`}
+        >
+          <ButtonGroup
+            value={selectedCategory}
+            onValueChange={(value) =>
+              setSelectedCategory(value as CategoryType)
+            }
+            className="flex flex-wrap"
+          >
             {categories.map((category, index) => (
-              <button
-                key={index}
-                onClick={() => setSelectedCategory(category)}
-                className={`text-xs px-3 py-1.5 rounded-full transition-all transform duration-200 font-semibold ${
-                  selectedCategory === category
-                    ? "bg-brand text-black border-[1.9px] border-black"
-                    : "bg-black text-white"
-                }`}
-              >
-                {category}
-              </button>
+              <ButtonGroupItem value={category} key={index}>{category}</ButtonGroupItem>
             ))}
-          </div>
-        )}
+          </ButtonGroup>
+        </div>
 
         {/* Toggle buttons */}
         <div className="flex flex-row items-center gap-2 px-4 mb-3 pointer-events-auto">
@@ -270,76 +262,48 @@ export default function Home() {
             onClick={() => setShowCard(!showCard)}
             className="bg-white text-gray-800 shadow-lg border-[1.9px] border-black hover:bg-gray-100 p-2 rounded-full transition-transform active:translate-y-1"
           >
-            {showCard ? (
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                className="w-4 h-4"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke="currentColor"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M19 9l-7 7-7-7"
-                />
-              </svg>
-            ) : (
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                className="w-4 h-4"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke="currentColor"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M5 15l7-7 7 7"
-                />
-              </svg>
-            )}
+            {showCard ? <ChevronDown size={18} /> : <ChevronUp size={18} />}
           </button>
 
           <div className="relative">
-            {selectedCategory && (
-              <div className="absolute -top-1 -right-1 w-5 h-5 text-xs bg-black border-[1.9px] border-black text-white rounded-full text-center flex flex-row items-center justify-center font-semibold">
-                <p>1</p>
-              </div>
-            )}
-            <button
-              onClick={() => setShowFilter((prev) => !prev)}
-              className="text-xs font-bold bg-brand text-black border-[1.9px] border-black px-3 py-2 rounded-full transition-transform active:translate-y-1"
+            <div
+              className={`absolute -top-1 -right-1 w-5 h-5 text-xs bg-black border-[1.9px] border-black text-white rounded-full text-center flex flex-row items-center justify-center font-semibold z-10 ${
+                selectedCategory ? "visible" : "hidden"
+              }`}
             >
-              {showFilter ? "HIDE FILTER" : "SHOW FILTER"}
-            </button>
+              <p>1</p>
+            </div>
+            <Button
+              onClick={() => setShowFilter(!showFilter)}
+              className="rounded-full"
+            >
+              {showFilter ? "Hide filter" : "Show filter"}
+            </Button>
           </div>
-          {selectedCategory && (
-            <button
-              onClick={() => setSelectedCategory(null)}
-              className="text-xs font-bold bg-brand text-black border-[1.9px] border-black px-3 py-2 rounded-full transition-transform active:translate-y-1"
-            >
-              CLEAR FILTER
-            </button>
-          )}
+
+          <Button
+            onClick={() => setSelectedCategory(null)}
+            className={`rounded-full ${
+              selectedCategory ? "visible" : "hidden"
+            }`}
+          >
+            Clear filter
+          </Button>
         </div>
 
         {/* Card list */}
         <div className="flex gap-4 overflow-x-auto px-4 pb-5 pt-5 no-scrollbar pr-6 pointer-events-auto">
           {filterPlacesByCategory(selectedCategory).map((place, index) => (
-            <div
+            <Card
               key={index}
               ref={(el) => {
                 placeRefs.current[index] = el;
               }}
-              className={`bg-white border-black border-[1.9px] rounded-xl px-5 py-4 w-[280px] h-[160px] shrink-0 transition-transform duration-300 cursor-pointer relative
-          ${
-            selectedPlace && selectedPlace.name === place.name
-              ? "scale-[1.05] z-20 -translate-y-2 shadow-[0_6px_0_rgba(0,0,0,1)]"
-              : "hover:scale-[1.05] z-10"
-          }`}
+              className={
+                selectedPlace && selectedPlace.name === place.name
+                  ? "scale-[1.05] z-20 -translate-y-2 shadow-[0_6px_0_rgba(0,0,0,1)]"
+                  : "hover:scale-[1.05] z-10"
+              }
               onClick={() => {
                 setSelectedPlace(place);
 
@@ -360,42 +324,17 @@ export default function Home() {
                 });
               }}
             >
-              <h3 className="text-base font-bold text-black">{place.name}</h3>
-              <span className="inline-block text-xs font-semibold text-gray-600 mt-1">
-                {place.category}
-              </span>
-              <div className="mt-4">
-                <button className="text-xs font-bold bg-brand text-black border-[1.9px] border-black px-3 py-2 rounded w-full transition-transform active:translate-y-1">
-                  VIEW DETAILS
-                </button>
-              </div>
-
-              <div className="absolute top-2 right-2 w-3 h-3 bg-brand border-[1.9px] border-black rounded-full" />
-            </div>
+              <CardHeader>
+                <CardTitle>{place.name}</CardTitle>
+                <CardDescription>{place.category}</CardDescription>
+              </CardHeader>
+              <CardFooter>
+                <Button className="w-full">View details</Button>
+              </CardFooter>
+            </Card>
           ))}
         </div>
       </div>
-
-      {/* <div className="absolute top-0 left-0 z-10 m-4 p-2 bg-white shadow-lg rounded-xl flex gap-2 flex-wrap">
-        {categories.map((category) => (
-          <button
-            key={category}
-            className={`px-4 py-2 rounded-lg text-sm font-medium border transition-colors duration-300 ${
-              selectedCategory === category
-                ? "bg-amber-600 text-white"
-                : "bg-gray-100 text-gray-800 hover:bg-amber-600 hover:text-white"
-            }`}
-            onClick={() => setSelectedCategory(category)}
-          >
-            {category}
-          </button>
-        ))}
-      </div> */}
-
-      <img
-        src="/logo/kuantan-fun-map-2.png"
-        className="absolute z-20 w-52 h-52 -top-12 left-3"
-      />
 
       <div ref={mapContainer} className="w-full h-full" />
     </div>

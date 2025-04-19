@@ -1,6 +1,6 @@
 import { CategoryType } from "@/app/data";
 
-export function getIcons(categoryType: CategoryType) {
+export function getMarkerIcon(categoryType: CategoryType) {
   if (categoryType === "Beach") {
     return "/icons/beach.png";
   } else if (categoryType === "Museum") {
