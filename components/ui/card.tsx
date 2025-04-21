@@ -6,7 +6,7 @@ const Card = forwardRef<HTMLDivElement, HTMLAttributes<HTMLDivElement>>(
     <div
       ref={ref}
       className={cn(
-        "bg-white border-[1.9px] border-black rounded-xl px-5 py-4 w-[280px] h-[160px] shrink-0 transition-transform duration-300 cursor-pointer relative",
+        "bg-white border-[1.9px] border-black rounded-xl px-5 py-4 w-[280px] min-h-[160px] shrink-0 transition-transform duration-300 cursor-pointer relative flex flex-col justify-between",
         className
       )}
       {...props}
@@ -49,7 +49,7 @@ const CardContent = ({
   className,
   ...props
 }: HTMLAttributes<HTMLDivElement>) => (
-  <div className={cn("mt-2", className)} {...props} />
+  <div className={cn("text-sm", className)} {...props} />
 );
 CardContent.displayName = "CardContent";
 
@@ -61,6 +61,7 @@ const CardFooter = ({
 );
 CardFooter.displayName = "CardFooter";
 
+// 🧩 Export all
 export {
   Card,
   CardHeader,
