@@ -10,16 +10,19 @@ import maplibregl, {
 import { categories, CategoryType, Place, places } from "./data";
 import { getMarkerIcon } from "@/lib/get-marker-icon";
 import { createRoot } from "react-dom/client";
-import { ChevronDown, ChevronUp } from "lucide-react";
+import { ChevronDown, ChevronUp, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
   Card,
+  CardContent,
   CardDescription,
   CardFooter,
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
 import { ButtonGroup, ButtonGroupItem } from "@/components/ui/button-group";
+import { motion, AnimatePresence } from "motion/react";
+import { IconButton } from "@/components/ui/icon-button";
 
 export default function Home() {
   const mapContainer = useRef<HTMLDivElement | null>(null);
@@ -32,6 +35,9 @@ export default function Home() {
   );
   const placeRefs = useRef<Record<number, HTMLDivElement | null>>({});
   const [showFilter, setShowFilter] = useState<boolean>(false);
+  const [expandedCardId, setExpandedCardId] = useState<string | null>(null);
+  const [closingCardId, setClosingCardId] = useState<string | null>(null);
+  const [expandedCardInfo, setExpandedCardInfo] = useState<Place | null>(null);
 
   const filterPlacesByCategory = (category: CategoryType | null) => {
     if (category) {
@@ -68,6 +74,7 @@ export default function Home() {
           </div>
 
           {/* Icon */}
+          {/* eslint-disable-next-line @next/next/no-img-element */}
           <img
             src="/icons/more.png"
             alt="cluster icon"
@@ -224,6 +231,7 @@ export default function Home() {
 
   return (
     <div className="relative w-full h-dvh">
+      {/* Fun map logo top left */}
       <img
         src="/logo/kuantan-fun-map-2.png"
         className="absolute z-20 w-36 h-36 lg:w-48 lg:h-48 -top-5 lg:-top-12 left-3"
@@ -238,6 +246,7 @@ export default function Home() {
             : "translate-y-3/4"
         }`}
       >
+        {/* Category filter buttons */}
         <div
           className={`flex flex-wrap gap-2 px-4 mb-3 w-full max-w-lg pointer-events-auto ${
             showFilter ? "visible" : "hidden"
@@ -251,19 +260,18 @@ export default function Home() {
             className="flex flex-wrap"
           >
             {categories.map((category, index) => (
-              <ButtonGroupItem value={category} key={index}>{category}</ButtonGroupItem>
+              <ButtonGroupItem value={category} key={index}>
+                {category}
+              </ButtonGroupItem>
             ))}
           </ButtonGroup>
         </div>
 
-        {/* Toggle buttons */}
         <div className="flex flex-row items-center gap-2 px-4 mb-3 pointer-events-auto">
-          <button
-            onClick={() => setShowCard(!showCard)}
-            className="bg-white text-gray-800 shadow-lg border-[1.9px] border-black hover:bg-gray-100 p-2 rounded-full transition-transform active:translate-y-1"
-          >
+          {/* Show and hide card button */}
+          <IconButton onClick={() => setShowCard(!showCard)}>
             {showCard ? <ChevronDown size={18} /> : <ChevronUp size={18} />}
-          </button>
+          </IconButton>
 
           <div className="relative">
             <div
@@ -281,6 +289,7 @@ export default function Home() {
             </Button>
           </div>
 
+          {/* Clear filter button */}
           <Button
             onClick={() => setSelectedCategory(null)}
             className={`rounded-full ${
@@ -291,51 +300,125 @@ export default function Home() {
           </Button>
         </div>
 
-        {/* Card list */}
+        {/* Place card lists  */}
         <div className="flex gap-4 overflow-x-auto px-4 pb-5 pt-5 no-scrollbar pr-6 pointer-events-auto">
           {filterPlacesByCategory(selectedCategory).map((place, index) => (
-            <Card
-              key={index}
-              ref={(el) => {
-                placeRefs.current[index] = el;
-              }}
-              className={
-                selectedPlace && selectedPlace.name === place.name
-                  ? "scale-[1.05] z-20 -translate-y-2 shadow-[0_6px_0_rgba(0,0,0,1)]"
-                  : "hover:scale-[1.05] z-10"
-              }
-              onClick={() => {
-                setSelectedPlace(place);
-
-                placeRefs.current[index]?.scrollIntoView({
-                  behavior: "smooth",
-                  inline: "center",
-                  block: "nearest",
-                });
-
-                const map = mapRef.current;
-                if (!map) return;
-
-                map.flyTo({
-                  center: place.coordinates,
-                  zoom: 18,
-                  speed: 1.2,
-                  curve: 1.4,
-                });
-              }}
+            <motion.div
+              key={place.name}
+              className={`min-w-[250px] flex-shrink-0 ${
+                expandedCardId === place.name || closingCardId === place.name
+                  ? "z-30"
+                  : ""
+              }`}
+              layoutId={`card-container-${place.name}`}
             >
-              <CardHeader>
-                <CardTitle>{place.name}</CardTitle>
-                <CardDescription>{place.category}</CardDescription>
-              </CardHeader>
-              <CardFooter>
-                <Button className="w-full">View details</Button>
-              </CardFooter>
-            </Card>
+              <Card
+                ref={(el) => {
+                  placeRefs.current[index] = el;
+                }}
+                className={`h-full ${
+                  selectedPlace?.name === place.name
+                    ? "scale-[1.05] z-20 -translate-y-2 shadow-[0_6px_0_rgba(0,0,0,1)]"
+                    : "hover:scale-[1.05] z-10"
+                }`}
+                onClick={() => {
+                  setSelectedPlace(place);
+                  placeRefs.current[index]?.scrollIntoView({
+                    behavior: "smooth",
+                    inline: "center",
+                    block: "nearest",
+                  });
+
+                  const map = mapRef.current;
+                  if (map) {
+                    map.flyTo({
+                      center: place.coordinates,
+                      zoom: 18,
+                      speed: 1.2,
+                      curve: 1.4,
+                    });
+                  }
+                }}
+              >
+                <div className="w-3 h-3 border-[1.9px] border-black bg-brand absolute top-3 right-3 rounded-full" />
+                <CardHeader>
+                  <motion.div layoutId={`card-title-${place.name}`}>
+                    <CardTitle>{place.name}</CardTitle>
+                  </motion.div>
+                  <motion.div layoutId={`card-description-${place.name}`}>
+                    <CardDescription>{place.category}</CardDescription>
+                  </motion.div>
+                </CardHeader>
+                <CardFooter>
+                  <motion.div layoutId={`card-button-${place.name}`}>
+                    <Button
+                      className="w-full"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        setExpandedCardId(place.name);
+                        setExpandedCardInfo(place);
+                      }}
+                    >
+                      View details
+                    </Button>
+                  </motion.div>
+                </CardFooter>
+              </Card>
+            </motion.div>
           ))}
         </div>
       </div>
 
+      {/*  Expanded selected card */}
+      <AnimatePresence>
+        {expandedCardId && expandedCardInfo && (
+          <motion.div
+            key={expandedCardId}
+            layoutId={`card-container-${expandedCardId}`}
+            className="fixed inset-0 z-50 p-4 overflow-y-auto"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+          >
+            <Card className="w-full h-full">
+              <IconButton
+                onClick={() => {
+                  setClosingCardId(expandedCardId);
+                  setExpandedCardId(null);
+                  setExpandedCardInfo(null);
+
+                  setTimeout(() => {
+                    setClosingCardId(null);
+                  }, 400);
+                }}
+                className=" absolute top-5 right-5"
+              >
+                <X size={18} />
+              </IconButton>
+              <CardHeader>
+                <motion.div layoutId={`card-title-${expandedCardId}`}>
+                  <CardTitle className="text-lg">
+                    {expandedCardInfo.name}
+                  </CardTitle>
+                </motion.div>
+                <motion.div layoutId={`card-description-${expandedCardId}`}>
+                  <CardDescription className="text-sm">{expandedCardInfo.category}</CardDescription>
+                </motion.div>
+              </CardHeader>
+
+              <CardContent className="flex-1"></CardContent>
+
+              <CardFooter>
+                <motion.div layoutId={`card-button-${expandedCardId}`}>
+                  <Button className="w-full">Open in Google maps</Button>
+                </motion.div>
+              </CardFooter>
+            </Card>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      {/* Render map here */}
       <div ref={mapContainer} className="w-full h-full" />
     </div>
   );
