@@ -34,7 +34,7 @@ export default function Modal({
           <DialogTitle>{title}</DialogTitle>
           <DialogDescription>{description}</DialogDescription>
         </DialogHeader>
-        {children}
+        <div className="relative">{children}</div>
       </DialogContent>
     </Dialog>
   );

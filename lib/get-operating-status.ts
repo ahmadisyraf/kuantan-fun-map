@@ -10,17 +10,24 @@ type Status = "Open" | "Closing soon" | "Opening soon" | "Closed";
 
 export function getOperatingStatus(hours: string[]): Status {
   const today = new Date();
-  const dayIndex = today.getDay(); // Sunday: 0, Monday: 1, ...
-  const todayHours = hours[dayIndex === 0 ? 6 : dayIndex - 1]; // adjust index for your format
+  const dayIndex = today.getDay(); 
+  const todayHours = hours[dayIndex === 0 ? 6 : dayIndex - 1];
 
-  if (todayHours.includes("Closed")) return "Closed";
+  if (!todayHours || todayHours.includes("Closed")) {
+    return "Closed";
+  }
+
+  if (todayHours.includes("Open 24 hours")) {
+    return "Open";
+  }
 
   const [, timeRange] = todayHours.split(": ");
-  const [openTimeStr, closeTimeStr] = timeRange.split(" – ");
+  if (!timeRange || !timeRange.includes("–")) return "Closed";
+
+  const [openTimeStr, closeTimeStr] = timeRange.split("–");
 
   const openTime = parse(openTimeStr.trim(), "hh:mm a", today);
   const closeTime = parse(closeTimeStr.trim(), "hh:mm a", today);
-
   const now = new Date();
 
   if (isBefore(now, openTime)) {
