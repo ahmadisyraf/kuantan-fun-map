@@ -1,4 +1,4 @@
-import { CategoryType } from "@/app/data";
+import { CategoryType } from "@/types/category";
 
 export function getMarkerIcon(categoryType: CategoryType) {
   if (categoryType === "Beach") {
@@ -19,6 +19,8 @@ export function getMarkerIcon(categoryType: CategoryType) {
     return "/icons/zoo.png";
   } else if (categoryType === "Riverfront") {
     return "/icons/riverfront.png";
+  } else if (categoryType === "Cafe") {
+    return "/icons/cafe.png";
   } else {
     return "/icons/unknown.png";
   }
