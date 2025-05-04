@@ -29,12 +29,12 @@ export default function Modal({
         }
       }}
     >
-      <DialogContent className="border-[1.9px] border-black shadow-[0_6px_0_rgba(0,0,0,1)]">
+      <DialogContent className="border-[1.9px] border-black shadow-[0_6px_0_rgba(0,0,0,1)] max-h-[90vh] overflow-y-auto">
         <DialogHeader className="text-left">
           <DialogTitle>{title}</DialogTitle>
           <DialogDescription>{description}</DialogDescription>
         </DialogHeader>
-        <div className="overflow-y-auto">{children}</div>
+        {children}
       </DialogContent>
     </Dialog>
   );
