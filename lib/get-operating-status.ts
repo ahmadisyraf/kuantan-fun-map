@@ -10,7 +10,7 @@ type Status = "Open" | "Closing soon" | "Opening soon" | "Closed";
 
 export function getOperatingStatus(hours: string[]): Status {
   const today = new Date();
-  const dayIndex = today.getDay(); // Sunday: 0, Monday: 1, ...
+  const dayIndex = today.getDay(); 
   const todayHours = hours[dayIndex === 0 ? 6 : dayIndex - 1];
 
   if (!todayHours || todayHours.includes("Closed")) {
