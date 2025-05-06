@@ -10,7 +10,7 @@ import maplibregl, {
 } from "maplibre-gl";
 import { getMarkerIcon } from "@/lib/get-marker-icon";
 import { createRoot } from "react-dom/client";
-import { ChevronDown, ChevronUp } from "lucide-react";
+import { ChevronDown, ChevronUp, LocateFixed } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -27,6 +27,8 @@ import { categories } from "@/constants/categories";
 import Link from "next/link";
 import { getOperatingStatus } from "@/lib/get-operating-status";
 import { cn } from "@/lib/cn";
+import { customToast } from "@/components/ui/toast";
+import { distance } from "@turf/distance";
 
 export default function MapScreen({ places }: { places: PlaceType[] }) {
   const mapContainer = useRef<HTMLDivElement | null>(null);
@@ -39,12 +41,16 @@ export default function MapScreen({ places }: { places: PlaceType[] }) {
   );
   const placeRefs = useRef<Record<number, HTMLDivElement | null>>({});
   const [showFilter, setShowFilter] = useState<boolean>(false);
+  const [userLocation, setUserLocation] = useState<{
+    lat: number;
+    lng: number;
+  } | null>();
 
   const filterPlacesByCategory = (category: CategoryType | null) => {
     if (category) {
       return places.filter((place) => place.category === category);
     }
-    return places; 
+    return places;
   };
 
   const renderClusterMarkers = (map: Map) => {
@@ -232,6 +238,40 @@ export default function MapScreen({ places }: { places: PlaceType[] }) {
 
   return (
     <div className="relative w-full h-dvh">
+      <IconButton
+        className="absolute top-10 right-5 z-10"
+        onClick={() => {
+          navigator.geolocation.getCurrentPosition(
+            (geo) => {
+              console.log(
+                `latitude: ${geo.coords.latitude}, longitude: ${geo.coords.longitude}`
+              );
+              setUserLocation({
+                lat: geo.coords.latitude,
+                lng: geo.coords.longitude,
+              });
+            },
+            (err) => {
+              if (err.code === err.PERMISSION_DENIED) {
+                customToast({
+                  status: "error",
+                  title: "Please allow share location in your browser settings",
+                });
+              } else if (err.POSITION_UNAVAILABLE) {
+                customToast({
+                  status: "error",
+                  title: "Unable to find your location",
+                });
+              } else {
+                console.error(err.message);
+              }
+            },
+            { enableHighAccuracy: true }
+          );
+        }}
+      >
+        <LocateFixed />
+      </IconButton>
       {/* Fun map logo top left */}
       <img
         src="/logo/kuantan-fun-map-2.png"
@@ -306,6 +346,14 @@ export default function MapScreen({ places }: { places: PlaceType[] }) {
         <div className="flex gap-4 overflow-x-auto px-4 pb-5 pt-5 no-scrollbar pr-6 pointer-events-auto">
           {filterPlacesByCategory(selectedCategory).map((place, index) => {
             const status = getOperatingStatus(place.openingHours);
+            const placeDistance = userLocation
+              ? distance(
+                  [userLocation.lng, userLocation.lat],
+                  [place.lng, place.lat],
+                  { units: "kilometers" }
+                )
+              : null;
+
             return (
               <Card
                 key={index}
@@ -339,8 +387,9 @@ export default function MapScreen({ places }: { places: PlaceType[] }) {
                 <div className="w-3 h-3 border-[1.9px] border-black bg-brand absolute top-3 right-3 rounded-full" />
                 <CardHeader>
                   <CardTitle>{place.name}</CardTitle>
-                  <CardDescription>
-                    {place.category} •{" "}
+                  <CardDescription className="flex flex-wrap items-center gap-x-1">
+                    <span>{place.category}</span>
+                    <span className="text-muted">•</span>
                     <span
                       className={cn(
                         status === "Closed" && "text-red-500",
@@ -351,6 +400,12 @@ export default function MapScreen({ places }: { places: PlaceType[] }) {
                     >
                       {status}
                     </span>
+                    {placeDistance !== null && (
+                      <>
+                        <span className="text-muted">•</span>
+                        <span>{placeDistance.toFixed(2)} km</span>
+                      </>
+                    )}
                   </CardDescription>
                 </CardHeader>
                 <CardFooter>

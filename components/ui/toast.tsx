@@ -24,26 +24,18 @@ function Toast({ title, status }: ToastProps) {
     return "bg-red-200";
   };
 
-  const getEmoji = () => {
-    if (status === "loading")
-      return <Loader2 size={18} className="animate-spin" />;
-    if (status === "success") return <Check size={18} />;
-    return <X size={18} />;
-  };
-
   return (
     <div
       className={`w-full md:max-w-[380px] border-2 border-black p-4 rounded-lg shadow-[0_6px_0_rgba(0,0,0,1)] ${getBgColor()}`}
     >
       <span className="text-sm font-semibold flex flex-row items-center gap-3">
-        {getEmoji()}
         {title}
       </span>
     </div>
   );
 }
 
-function customToast(props: Omit<ToastProps, "id">) {
+export function customToast(props: Omit<ToastProps, "id">) {
   return toast.custom((id) => <Toast {...props} id={id} />);
 }
 
