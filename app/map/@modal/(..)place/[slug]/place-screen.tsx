@@ -12,6 +12,7 @@ import {
 } from "@/components/ui/carousel";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
+import { customToast } from "@/components/ui/toast";
 
 export default function PlaceScreen({ place }: { place: PlaceType }) {
   const [api, setApi] = useState<CarouselApi>();
@@ -87,10 +88,40 @@ export default function PlaceScreen({ place }: { place: PlaceType }) {
         </div>
       )}
 
-      {/* Open in google map button */}
-      <Link href={place.url} className="block">
-        <Button className="w-full">Open in google maps</Button>
-      </Link>
+      <div className="space-y-2">
+        {/* Open in google map button */}
+        <Link href={place.url} className="block">
+          <Button className="w-full">Open in google maps</Button>
+        </Link>
+        <Button
+          className="w-full"
+          onClick={() => {
+            if (navigator.share) {
+              navigator
+                .share({
+                  title: place.name,
+                  text: `Check out ${place.name} at ${place.address}!`,
+                  url: window.location.href,
+                })
+                .then(() => {
+                  customToast({
+                    title: `You've shared ${place.name}`,
+                    status: "success",
+                  });
+                })
+                .catch((err) => {
+                  if (err.name !== "AbortError") {
+                    console.error("Share failed:", err);
+                  }
+                });
+            } else {
+              alert("Sharing not supported on this browser.");
+            }
+          }}
+        >
+          Share this place
+        </Button>
+      </div>
     </div>
   );
 }

@@ -29,7 +29,7 @@ export default function Modal({
         }
       }}
     >
-      <DialogContent className="border-[1.9px] border-black shadow-[0_6px_0_rgba(0,0,0,1)] max-h-[90dvh] overflow-y-auto">
+      <DialogContent className="border-[1.9px] border-black shadow-[0_6px_0_rgba(0,0,0,1)] max-h-[90dvh] overflow-y-auto no-scrollbar">
         <DialogHeader className="text-left">
           <DialogTitle>{title}</DialogTitle>
           <DialogDescription>{description}</DialogDescription>
