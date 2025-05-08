@@ -2,7 +2,7 @@
 
 import slugify from "slugify";
 import { db } from "@/db";
-import { placesTable } from "@/db/schema/places";
+import { place } from "@/db/schema/place";
 import { PlaceType } from "@/types/place";
 import { revalidateTag } from "next/cache";
 
@@ -16,7 +16,7 @@ export async function addPlace({
   openingHours,
   url
 }: PlaceType) {
-  await db.insert(placesTable).values({
+  await db.insert(place).values({
     name,
     address,
     lat,

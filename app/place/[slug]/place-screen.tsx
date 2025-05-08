@@ -48,28 +48,34 @@ export default function PlaceScreen({ place }: { place: PlaceType }) {
         </CardHeader>
         <CardContent className="py-5">
           {/* Image carousell */}
-          <div className="border-[1.9px] border-black rounded-lg overflow-hidden">
-            <Carousel setApi={setApi} className="relative">
-              <CarouselContent>
-                {place.photos.map((photo) => (
-                  <CarouselItem key={photo}>
-                    <img
-                      src={photo}
-                      className="w-full aspect-square lg:aspect-video object-cover"
-                      referrerPolicy="no-referrer"
-                    />
-                  </CarouselItem>
-                ))}
-              </CarouselContent>
+          <div className="space-y-3">
+            <div className="border-[1.9px] border-black rounded-lg overflow-hidden">
+              <Carousel setApi={setApi} className="relative">
+                <CarouselContent>
+                  {place.photos.map((photo) => (
+                    <CarouselItem key={photo}>
+                      <img
+                        src={photo}
+                        className="w-full aspect-square lg:aspect-video object-cover"
+                        referrerPolicy="no-referrer"
+                      />
+                    </CarouselItem>
+                  ))}
+                </CarouselContent>
 
-              {/* Slide Count */}
-              <div className="absolute top-5 right-5 text-sm text-muted-foreground border-[1.9px] border-black rounded-lg bg-brand px-3 py-1">
-                Slide {current} of {count}
-              </div>
+                {/* Slide Count */}
+                <div className="absolute top-5 right-5 text-sm text-muted-foreground border-[1.9px] border-black rounded-lg bg-brand px-3 py-1">
+                  Slide {current} of {count}
+                </div>
 
-              <CarouselPrevious className="hidden lg:inline" />
-              <CarouselNext className="hidden lg:inline" />
-            </Carousel>
+                <CarouselPrevious className="hidden lg:inline" />
+                <CarouselNext className="hidden lg:inline" />
+              </Carousel>
+            </div>
+            <p className="text-xs italic">
+              Note: Some images may be unavailable due to Google Maps usage
+              limits.
+            </p>
           </div>
 
           {/* Operating hour */}
@@ -82,7 +88,7 @@ export default function PlaceScreen({ place }: { place: PlaceType }) {
                 <div className="space-y-1 text-sm text-muted-foreground">
                   {place.openingHours.map((entry, index) => {
                     const [day, ...timeParts] = entry.split(":");
-                    const time = timeParts.join(":").trim(); 
+                    const time = timeParts.join(":").trim();
 
                     return (
                       <div
