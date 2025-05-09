@@ -10,7 +10,7 @@ import maplibregl, {
 } from "maplibre-gl";
 import { getMarkerIcon } from "@/lib/get-marker-icon";
 import { createRoot } from "react-dom/client";
-import { ChevronDown, ChevronUp, LocateFixed, User } from "lucide-react";
+import { ChevronDown, ChevronUp, LocateFixed } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -276,9 +276,9 @@ export default function MapScreen({ places }: { places: PlaceType[] }) {
         </IconButton>
 
         {/* User profile button */}
-        <IconButton>
+        {/* <IconButton>
           <User size={18} />
-        </IconButton>
+        </IconButton> */}
       </div>
 
       {/* Fun map logo top left */}
