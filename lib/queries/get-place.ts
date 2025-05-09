@@ -1,5 +1,5 @@
 import { db } from "@/db";
-import { placesTable } from "@/db/schema/places";
+import { place as placeTable } from "@/db/schema/place";
 import { eq } from "drizzle-orm";
 import { unstable_cache } from "next/cache";
 
@@ -8,8 +8,8 @@ async function getPlace(slug: string) {
     async () => {
       const [place] = await db
         .select()
-        .from(placesTable)
-        .where(eq(placesTable.slug, slug));
+        .from(placeTable)
+        .where(eq(placeTable.slug, slug));
 
       return place;
     },

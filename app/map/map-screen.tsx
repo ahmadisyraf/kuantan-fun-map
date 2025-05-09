@@ -8,7 +8,7 @@ import maplibregl, {
   GeoJSONSource,
   Marker,
 } from "maplibre-gl";
-import { getMarkerIcon } from "@/lib/get-marker-icon";
+import { getMarkerIcon } from "@/utils/get-marker-icon";
 import { createRoot } from "react-dom/client";
 import { ChevronDown, ChevronUp, LocateFixed } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -25,8 +25,8 @@ import { CategoryType } from "@/types/category";
 import { PlaceType } from "@/types/place";
 import { categories } from "@/constants/categories";
 import Link from "next/link";
-import { getOperatingStatus } from "@/lib/get-operating-status";
-import { cn } from "@/lib/cn";
+import { getOperatingStatus } from "@/utils/get-operating-status";
+import { cn } from "@/utils/cn";
 import { customToast } from "@/components/ui/toast";
 import { distance } from "@turf/distance";
 
@@ -69,7 +69,7 @@ export default function MapScreen({ places }: { places: PlaceType[] }) {
       const { point_count } = feature.properties!;
       const [lng, lat] = (feature.geometry as GeoJSON.Point).coordinates as [
         number,
-        number
+        number,
       ];
 
       const container = document.createElement("div");
@@ -143,7 +143,7 @@ export default function MapScreen({ places }: { places: PlaceType[] }) {
           })),
         },
         cluster: true,
-        clusterRadius: 90,
+        clusterRadius: 70,
         clusterMaxZoom: 15,
       });
 
@@ -168,7 +168,7 @@ export default function MapScreen({ places }: { places: PlaceType[] }) {
 
           const coords = (feature.geometry as GeoJSON.Point).coordinates as [
             number,
-            number
+            number,
           ];
           const name = feature.properties.name;
 
@@ -238,40 +238,49 @@ export default function MapScreen({ places }: { places: PlaceType[] }) {
 
   return (
     <div className="relative w-full h-dvh">
-      <IconButton
-        className="absolute top-10 right-5 z-10"
-        onClick={() => {
-          navigator.geolocation.getCurrentPosition(
-            (geo) => {
-              console.log(
-                `latitude: ${geo.coords.latitude}, longitude: ${geo.coords.longitude}`
-              );
-              setUserLocation({
-                lat: geo.coords.latitude,
-                lng: geo.coords.longitude,
-              });
-            },
-            (err) => {
-              if (err.code === err.PERMISSION_DENIED) {
-                customToast({
-                  status: "error",
-                  title: "Please allow share location in your browser settings",
+      <div className="absolute top-10 right-5 z-10 flex flex-col gap-2">
+        {/* Geo location button */}
+        <IconButton
+          onClick={() => {
+            navigator.geolocation.getCurrentPosition(
+              (geo) => {
+                console.log(
+                  `latitude: ${geo.coords.latitude}, longitude: ${geo.coords.longitude}`
+                );
+                setUserLocation({
+                  lat: geo.coords.latitude,
+                  lng: geo.coords.longitude,
                 });
-              } else if (err.POSITION_UNAVAILABLE) {
-                customToast({
-                  status: "error",
-                  title: "Unable to find your location",
-                });
-              } else {
-                console.error(err.message);
-              }
-            },
-            { enableHighAccuracy: true }
-          );
-        }}
-      >
-        <LocateFixed />
-      </IconButton>
+              },
+              (err) => {
+                if (err.code === err.PERMISSION_DENIED) {
+                  customToast({
+                    status: "error",
+                    title:
+                      "Please allow share location in your browser settings",
+                  });
+                } else if (err.POSITION_UNAVAILABLE) {
+                  customToast({
+                    status: "error",
+                    title: "Unable to find your location",
+                  });
+                } else {
+                  console.error(err.message);
+                }
+              },
+              { enableHighAccuracy: true }
+            );
+          }}
+        >
+          <LocateFixed size={18} />
+        </IconButton>
+
+        {/* User profile button */}
+        {/* <IconButton>
+          <User size={18} />
+        </IconButton> */}
+      </div>
+
       {/* Fun map logo top left */}
       <img
         src="/logo/kuantan-fun-map-2.png"
@@ -284,8 +293,8 @@ export default function MapScreen({ places }: { places: PlaceType[] }) {
           showCard
             ? "translate-y-0"
             : showFilter
-            ? "translate-y-2/4"
-            : "translate-y-3/4"
+              ? "translate-y-2/4"
+              : "translate-y-3/4"
         }`}
       >
         {/* Category filter buttons */}
@@ -325,7 +334,7 @@ export default function MapScreen({ places }: { places: PlaceType[] }) {
             </div>
             <Button
               onClick={() => setShowFilter(!showFilter)}
-              className="rounded-full"
+              className="rounded-full h-[37px]"
             >
               {showFilter ? "Hide filter" : "Show filter"}
             </Button>

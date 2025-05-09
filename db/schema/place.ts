@@ -7,7 +7,7 @@ import {
   timestamp,
 } from "drizzle-orm/pg-core";
 
-export const placesTable = pgTable("places", {
+export const place = pgTable("place", {
   id: integer().primaryKey().generatedAlwaysAsIdentity(),
   name: varchar({ length: 255 }).notNull().unique(),
   address: varchar({ length: 255 }).notNull(),
@@ -17,6 +17,6 @@ export const placesTable = pgTable("places", {
   category: varchar({ length: 100 }).notNull(),
   openingHours: jsonb("opening_hours").array().notNull(),
   slug: varchar({ length: 255 }).notNull(),
-  url: varchar({length: 255}).notNull(),
+  url: varchar({ length: 255 }).notNull(),
   createdAt: timestamp("created_at").defaultNow().notNull(),
 });

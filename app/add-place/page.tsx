@@ -21,7 +21,7 @@ import {
   SelectContent,
   SelectItem,
 } from "@/components/ui/select";
-import { cn } from "@/lib/cn";
+import { cn } from "@/utils/cn";
 import { PlaceType } from "@/types/place";
 import { addPlace } from "./action";
 import {

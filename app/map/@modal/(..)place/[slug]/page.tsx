@@ -1,7 +1,16 @@
 import { PlaceType } from "@/types/place";
-import { getPlace } from "@/app/place/[slug]/get-place";
 import Modal from "./modal";
 import PlaceScreen from "./place-screen";
+import { getPlaces } from "@/lib/queries/get-places";
+import { getPlace } from "@/lib/queries/get-place";
+
+export async function generateStaticParams() {
+  const places = (await getPlaces()) as PlaceType[];
+
+  return places.map((place) => ({
+    slug: place.slug,
+  }));
+}
 
 export default async function Place({
   params,
