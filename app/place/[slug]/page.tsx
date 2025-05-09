@@ -1,7 +1,7 @@
 import { PlaceType } from "@/types/place";
-import { getPlace } from "./get-place";
 import PlaceScreen from "./place-screen";
-import { getPlaces } from "./get-places";
+import { getPlaces } from "@/lib/queries/get-places";
+import { getPlace } from "@/lib/queries/get-place";
 
 export async function generateStaticParams() {
   const places = await getPlaces();

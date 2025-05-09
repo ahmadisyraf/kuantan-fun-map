@@ -6,7 +6,7 @@ import useEmblaCarousel, {
 } from "embla-carousel-react";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 
-import { cn } from "@/lib/cn";
+import { cn } from "@/utils/cn";
 import { Button } from "@/components/ui/button";
 import { IconButton } from "./icon-button";
 

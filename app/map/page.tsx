@@ -1,9 +1,9 @@
 import { PlaceType } from "@/types/place";
-import { getPlaces } from "./get-places";
 import MapScreen from "./map-screen";
+import { getPlaces } from "@/lib/queries/get-places";
 
 export default async function Map() {
   const places = (await getPlaces()) as PlaceType[];
 
-  return <MapScreen {...{places}} />;
+  return <MapScreen {...{ places }} />;
 }

@@ -8,7 +8,7 @@ import maplibregl, {
   GeoJSONSource,
   Marker,
 } from "maplibre-gl";
-import { getMarkerIcon } from "@/lib/get-marker-icon";
+import { getMarkerIcon } from "@/utils/get-marker-icon";
 import { createRoot } from "react-dom/client";
 import { ChevronDown, ChevronUp, LocateFixed } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -25,8 +25,8 @@ import { CategoryType } from "@/types/category";
 import { PlaceType } from "@/types/place";
 import { categories } from "@/constants/categories";
 import Link from "next/link";
-import { getOperatingStatus } from "@/lib/get-operating-status";
-import { cn } from "@/lib/cn";
+import { getOperatingStatus } from "@/utils/get-operating-status";
+import { cn } from "@/utils/cn";
 import { customToast } from "@/components/ui/toast";
 import { distance } from "@turf/distance";
 
