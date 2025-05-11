@@ -8,7 +8,7 @@ const getPlaces = unstable_cache(
   },
   ["places"],
   {
-    tags: ["places"],
+    tags: ["place"],
   }
 );
 

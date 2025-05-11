@@ -23,7 +23,7 @@ export function ButtonGroup({
 }: ButtonGroupProps) {
   return (
     <ButtonGroupContext.Provider value={{ value, onChange: onValueChange }}>
-      <div className={cn("inline-flex gap-2", className)} {...props} />
+      <div className={cn("flex gap-2", className)} {...props} />
     </ButtonGroupContext.Provider>
   );
 }
@@ -48,10 +48,10 @@ export const ButtonGroupItem = React.forwardRef<
       ref={ref}
       onClick={() => context.onChange(value)}
       className={cn(
-        "text-xs font-medium px-3 py-1 border-[1.9px] uppercase rounded-full transition-all",
+        "text-xs font-semibold px-3 py-1 border-[1.9px] uppercase rounded-full transition-all",
         context.value === value
-          ? "bg-brand text-black border-black"
-          : "bg-black text-white border-black",
+          ? "bg-black text-white border-black"
+          : "bg-brand text-balck border-black",
         className
       )}
       {...props}
