@@ -9,9 +9,9 @@ async function getPlacesByCategory(category: CategoryType) {
     async () => {
       return db.select().from(place).where(eq(place.category, category));
     },
-    ["places", `place:${category}`],
+    [`place:${category}`],
     {
-      tags: ["place", `place:${category}`],
+      tags: ["place"],
     }
   );
 

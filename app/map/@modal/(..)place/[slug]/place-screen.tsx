@@ -35,10 +35,8 @@ export default function PlaceScreen({ place }: { place: PlaceType }) {
   return (
     <div className="space-y-5">
       <div className="space-y-2">
-        {/* Image carousell */}
         <div className="border-[1.9px] border-black rounded-lg overflow-hidden relative">
           <Carousel setApi={setApi} className="relative">
-            {/* Slide Count */}
             <div className="absolute top-5 right-5 text-sm text-muted-foreground border-[1.9px] border-black rounded-lg bg-brand px-3 py-1 z-50">
               Slide {current} of {count}
             </div>

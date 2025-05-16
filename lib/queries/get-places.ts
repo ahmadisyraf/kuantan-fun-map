@@ -6,7 +6,7 @@ const getPlaces = unstable_cache(
   async () => {
     return db.select().from(place);
   },
-  ["places"],
+  ["place"],
   {
     tags: ["place"],
   }

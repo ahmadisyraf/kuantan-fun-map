@@ -1,7 +1,7 @@
-/* eslint-disable @next/next/no-img-element */
 "use client";
 
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
+import { createRoot } from "react-dom/client";
 import maplibregl, {
   Map,
   MapMouseEvent,
@@ -9,25 +9,17 @@ import maplibregl, {
   Marker,
 } from "maplibre-gl";
 import { getMarkerIcon } from "@/utils/get-marker-icon";
-import { createRoot } from "react-dom/client";
-import { ChevronDown, ChevronUp, LocateFixed } from "lucide-react";
-import { Button } from "@/components/ui/button";
-import {
-  Card,
-  CardDescription,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
-import { ButtonGroup, ButtonGroupItem } from "@/components/ui/button-group";
-import { IconButton } from "@/components/ui/icon-button";
 import { CategoryType } from "@/types/category";
 import { PlaceType } from "@/types/place";
 import { categories } from "@/constants/categories";
-import Link from "next/link";
-import { customToast } from "@/components/ui/toast";
 import { distance } from "@turf/distance";
-import { usePathname, useSearchParams, useRouter } from "next/navigation";
+import { useSearchParams } from "next/navigation";
+import Image from "next/image";
+import GeolocationButton from "./_components/geolocation-button";
+import ShowCardButton from "./_components/show-card-button";
+import PlaceCard from "./_components/place-card";
+import ShowFilterButton from "./_components/show-filter-button";
+import CategoryFilter from "./_components/category-filter";
 
 export default function MapScreen({ places }: { places: PlaceType[] }) {
   const mapContainer = useRef<HTMLDivElement | null>(null);
@@ -40,9 +32,8 @@ export default function MapScreen({ places }: { places: PlaceType[] }) {
     lat: number;
     lng: number;
   } | null>();
+  const [showFilter, setShowFilter] = useState<boolean>(false);
 
-  const router = useRouter();
-  const pathname = usePathname();
   const searchParams = useSearchParams();
 
   const selectedCategory = searchParams.get("category") as CategoryType;
@@ -137,7 +128,7 @@ export default function MapScreen({ places }: { places: PlaceType[] }) {
           })),
         },
         cluster: true,
-        clusterRadius: 70,
+        clusterRadius: 50,
         clusterMaxZoom: 15,
       });
 
@@ -230,94 +221,33 @@ export default function MapScreen({ places }: { places: PlaceType[] }) {
     };
   }, [places]);
 
-  // Get a new searchParams string by merging the current
-  // searchParams with a provided key/value pair
-  const createQueryString = useCallback(
-    (name: string, value: string) => {
-      const params = new URLSearchParams(searchParams.toString());
-      params.set(name, value);
-
-      return params.toString();
-    },
-    [searchParams]
-  );
-
   return (
     <div className="w-full h-dvh">
       {/* Fun map logo top left */}
-      <img
-        src="/logo/kuantan-fun-map-2.png"
-        className="absolute z-20 w-32 h-32 lg:w-32 lg:h-32 -top-5 lg:-top-5 left-3"
-        alt="logo"
-      />
-
-      {/* Category filter buttons */}
-      <div
-        className={`flex gap-2 px-4 mb-3 w-full overflow-auto pointer-events-auto absolute z-10 no-scrollbar top-24`}
-      >
-        <ButtonGroup
-          value={selectedCategory}
-          onValueChange={(value) =>
-            router.push(pathname + "?" + createQueryString("category", value))
-          }
-          className="flex"
-        >
-          {categories.map((category, index) => (
-            <ButtonGroupItem value={category} key={index}>
-              {category}
-            </ButtonGroupItem>
-          ))}
-        </ButtonGroup>
+      <div className="absolute z-20 w-32 h-32 lg:w-32 lg:h-32 -top-5 lg:-top-5 left-3">
+        <Image
+          src="/logo/kuantan-fun-map-2.png"
+          alt="Kuantan Fun Map Logo"
+          priority={true}
+          fill
+        />
       </div>
 
       <div
         className={`absolute pointer-events-none bottom-5 left-0 right-0 z-10 transition-transform duration-500 ${
-          showCard ? "translate-y-0" : " translate-y-2/4"
+          showCard ? "translate-y-0" : " translate-y-2/3"
         }`}
       >
-        <div className="flex flex-col pointer-events-auto">
-          {/* Geo location button */}
-          <div className="px-4 mb-2">
-            <IconButton
-              onClick={() => {
-                navigator.geolocation.getCurrentPosition(
-                  (geo) => {
-                    console.log(
-                      `latitude: ${geo.coords.latitude}, longitude: ${geo.coords.longitude}`
-                    );
-                    setUserLocation({
-                      lat: geo.coords.latitude,
-                      lng: geo.coords.longitude,
-                    });
-                  },
-                  (err) => {
-                    if (err.code === err.PERMISSION_DENIED) {
-                      customToast({
-                        status: "error",
-                        title:
-                          "Please allow share location in your browser settings",
-                      });
-                    } else if (err.POSITION_UNAVAILABLE) {
-                      customToast({
-                        status: "error",
-                        title: "Unable to find your location",
-                      });
-                    } else {
-                      console.error(err.message);
-                    }
-                  },
-                  { enableHighAccuracy: true }
-                );
-              }}
-            >
-              <LocateFixed size={18} />
-            </IconButton>
-          </div>
-          <div className="flex flex-row items-center gap-2 px-4 mb-3 pointer-events-auto">
-            {/* Show and hide card button */}
-            <IconButton onClick={() => setShowCard(!showCard)}>
-              {showCard ? <ChevronDown size={18} /> : <ChevronUp size={18} />}
-            </IconButton>
+        <div className="flex flex-col space-y-2 relative">
+          <GeolocationButton {...{ setUserLocation }} />
+          <div className="flex flex-row items-center relative">
+            <ShowCardButton {...{ showCard, setShowCard }} />
+            <div className="flex flex-row items-center">
+              <CategoryFilter {...{ showFilter, selectedCategory }} />
+              <ShowFilterButton
+                {...{ showFilter, setShowFilter, selectedCategory }}
+              />
+            </div>
           </div>
         </div>
 
@@ -333,57 +263,18 @@ export default function MapScreen({ places }: { places: PlaceType[] }) {
               : null;
 
             return (
-              <Card
+              <PlaceCard
                 key={index}
-                ref={(el) => {
-                  placeRefs.current[index] = el;
+                {...{
+                  index,
+                  mapRef,
+                  place,
+                  placeDistance,
+                  placeRefs,
+                  selectedPlace,
+                  setSelectedPlace,
                 }}
-                className={`h-full ${
-                  selectedPlace?.name === place.name
-                    ? "scale-[1.05] z-20 -translate-y-2 shadow-[0_6px_0_rgba(0,0,0,1)]"
-                    : "hover:scale-[1.05] z-10"
-                }`}
-                onClick={() => {
-                  setSelectedPlace(place);
-                  placeRefs.current[index]?.scrollIntoView({
-                    behavior: "smooth",
-                    inline: "center",
-                    block: "nearest",
-                  });
-
-                  const map = mapRef.current;
-                  if (map) {
-                    map.flyTo({
-                      center: [place.lng, place.lat],
-                      zoom: 18,
-                      speed: 1.2,
-                      curve: 1.4,
-                    });
-                  }
-                }}
-              >
-                <div className="w-3 h-3 border-[1.9px] border-black bg-brand absolute top-3 right-3 rounded-full" />
-                <CardHeader>
-                  <CardTitle>{place.name}</CardTitle>
-                  <CardDescription className="flex flex-wrap items-center gap-x-1">
-                    <span>{place.category}</span>
-                    {placeDistance !== null && (
-                      <>
-                        <span className="text-muted">•</span>
-                        <span>{placeDistance.toFixed(2)} km</span>
-                      </>
-                    )}
-                  </CardDescription>
-                </CardHeader>
-                <CardFooter>
-                  <Link
-                    href={`/place/${place.slug}`}
-                    onClick={(e) => e.stopPropagation()}
-                  >
-                    <Button className="w-full">View details</Button>
-                  </Link>
-                </CardFooter>
-              </Card>
+              />
             );
           })}
         </div>
