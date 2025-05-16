@@ -5,7 +5,10 @@ import {
   doublePrecision,
   jsonb,
   timestamp,
+  text,
 } from "drizzle-orm/pg-core";
+import { user } from "./user";
+import { relations } from "drizzle-orm";
 
 export const place = pgTable("place", {
   id: integer().primaryKey().generatedAlwaysAsIdentity(),
@@ -19,4 +22,12 @@ export const place = pgTable("place", {
   slug: varchar({ length: 255 }).notNull(),
   url: varchar({ length: 255 }).notNull(),
   createdAt: timestamp("created_at").defaultNow().notNull(),
+  userId: text("user_id"),
 });
+
+export const placeToUserRelationship = relations(place, ({ one }) => ({
+  user: one(user, {
+    fields: [place.userId],
+    references: [user.id],
+  }),
+}));

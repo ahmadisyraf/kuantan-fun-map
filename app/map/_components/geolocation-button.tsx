@@ -16,7 +16,7 @@ export default function GeolocationButton({
 }: GeolocationButtonProps) {
   return (
     <IconButton
-      className="pointer-events-auto mx-4 w-fit"
+      className="pointer-events-auto w-fit"
       onClick={() => {
         navigator.geolocation.getCurrentPosition(
           (geo) => {
