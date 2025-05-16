@@ -5,6 +5,8 @@ import { db } from "@/db";
 import { place } from "@/db/schema/place";
 import { PlaceType } from "@/types/place";
 import { revalidateTag } from "next/cache";
+import { auth } from "@/lib/auth";
+import { headers } from "next/headers";
 
 export async function addPlace({
   name,
@@ -16,6 +18,14 @@ export async function addPlace({
   openingHours,
   url,
 }: PlaceType) {
+  const session = await auth.api.getSession({
+    headers: await headers(),
+  });
+
+  if (!session) {
+    throw new Error("Unauthorized");
+  }
+
   await db.insert(place).values({
     name,
     address,
@@ -26,6 +36,7 @@ export async function addPlace({
     openingHours,
     slug: slugify(name, { lower: true, remove: /[@]/g }),
     url,
+    userId: session.user.id,
   });
 
   revalidateTag("place");

@@ -13,7 +13,7 @@ export default function ShowCardButton({
   return (
     <IconButton
       onClick={() => setShowCard(!showCard)}
-      className="pointer-events-auto mx-4 w-fit"
+      className="pointer-events-auto w-fit"
     >
       {showCard ? <ChevronDown size={18} /> : <ChevronUp size={18} />}
     </IconButton>

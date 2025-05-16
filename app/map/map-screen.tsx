@@ -20,6 +20,7 @@ import ShowCardButton from "./_components/show-card-button";
 import PlaceCard from "./_components/place-card";
 import ShowFilterButton from "./_components/show-filter-button";
 import CategoryFilter from "./_components/category-filter";
+import UserButton from "./_components/user-button";
 
 export default function MapScreen({ places }: { places: PlaceType[] }) {
   const mapContainer = useRef<HTMLDivElement | null>(null);
@@ -238,11 +239,12 @@ export default function MapScreen({ places }: { places: PlaceType[] }) {
           showCard ? "translate-y-0" : " translate-y-2/3"
         }`}
       >
-        <div className="flex flex-col space-y-2 relative">
+        <div className="flex flex-col space-y-2 relative px-4">
+          <UserButton />
           <GeolocationButton {...{ setUserLocation }} />
           <div className="flex flex-row items-center relative">
             <ShowCardButton {...{ showCard, setShowCard }} />
-            <div className="flex flex-row items-center">
+            <div className="flex flex-row items-center space-x-2">
               <CategoryFilter {...{ showFilter, selectedCategory }} />
               <ShowFilterButton
                 {...{ showFilter, setShowFilter, selectedCategory }}
