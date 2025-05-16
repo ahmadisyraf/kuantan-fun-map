@@ -20,6 +20,7 @@ import {
   CarouselPrevious,
 } from "@/components/ui/carousel";
 import Link from "next/link";
+import { customToast } from "@/components/ui/toast";
 
 export default function PlaceScreen({ place }: { place: PlaceType }) {
   const [api, setApi] = useState<CarouselApi>();
@@ -111,10 +112,38 @@ export default function PlaceScreen({ place }: { place: PlaceType }) {
         </CardContent>
 
         {/* Open in google map button */}
-        <CardFooter>
+        <CardFooter className="space-y-2">
           <Link href={place.url}>
             <Button className="w-full">Open in google maps</Button>
           </Link>
+          <Button
+            className="w-full"
+            onClick={() => {
+              if (navigator.share) {
+                navigator
+                  .share({
+                    title: place.name,
+                    text: `Check out ${place.name} at ${place.address}!`,
+                    url: window.location.href,
+                  })
+                  .then(() => {
+                    customToast({
+                      title: `You've shared ${place.name}`,
+                      status: "success",
+                    });
+                  })
+                  .catch((err) => {
+                    if (err.name !== "AbortError") {
+                      console.error("Share failed:", err);
+                    }
+                  });
+              } else {
+                alert("Sharing not supported on this browser.");
+              }
+            }}
+          >
+            Share this place
+          </Button>
         </CardFooter>
       </Card>
     </div>

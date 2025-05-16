@@ -13,9 +13,9 @@ async function getPlace(slug: string) {
 
       return place;
     },
-    [slug],
+    [`place:${slug}`],
     {
-      tags: ["places"],
+      tags: ["place"],
     }
   );
 

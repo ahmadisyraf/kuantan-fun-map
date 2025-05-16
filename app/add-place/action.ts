@@ -14,7 +14,7 @@ export async function addPlace({
   lng,
   photos,
   openingHours,
-  url
+  url,
 }: PlaceType) {
   await db.insert(place).values({
     name,
@@ -28,5 +28,5 @@ export async function addPlace({
     url,
   });
 
-  revalidateTag("places");
+  revalidateTag("place");
 }
