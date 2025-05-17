@@ -6,13 +6,13 @@ export default function manifest(): MetadataRoute.Manifest {
     short_name: "Kuantan Fun Map",
     icons: [
       {
-        src: "/public/web-app-manifest-192x192.png",
+        src: "/web-app-manifest-192x192.png",
         sizes: "192x192",
         type: "image/png",
         purpose: "maskable",
       },
       {
-        src: "/public/web-app-manifest-512x512.png",
+        src: "/web-app-manifest-512x512.png",
         sizes: "512x512",
         type: "image/png",
         purpose: "maskable",
@@ -20,6 +20,6 @@ export default function manifest(): MetadataRoute.Manifest {
     ],
     theme_color: "#ffffff",
     background_color: "#ffffff",
-    display: "standalone",
+    display: "fullscreen",
   };
 }

@@ -6,7 +6,7 @@ import Link from "next/link";
 export default function UserButton() {
   const { data: session } = authClient.useSession();
   return (
-    <div>
+    <div className="pointer-events-auto">
       {session ? (
         // eslint-disable-next-line @next/next/no-img-element
         <img

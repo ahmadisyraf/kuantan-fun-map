@@ -15,7 +15,39 @@ const poppins = Poppins({
 
 export const metadata: Metadata = {
   title: "Kuantan Fun Map",
+  manifest: "/manifest.webmanifest",
+  icons: {
+    apple: [
+      {
+        url: "/web-app-manifest-192x192.png",
+        sizes: "192x192",
+        type: "image/png",
+      },
+      {
+        url: "/web-app-manifest-512x512.png",
+        sizes: "512x512",
+        type: "image/png",
+      },
+    ],
+    icon: [
+      {
+        url: "/web-app-manifest-192x192.png",
+        sizes: "192x192",
+        type: "image/png",
+      },
+      {
+        url: "/web-app-manifest-512x512.png",
+        sizes: "512x512",
+        type: "image/png",
+      },
+    ],
+  },
   description: "Explore Kuantan with Kuantan Fun Map",
+  appleWebApp: {
+    title: "Kuantan Fun Map",
+    statusBarStyle: "black-translucent",
+    capable: true,
+  },
 };
 
 export default function RootLayout({
