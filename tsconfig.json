@@ -33,7 +33,7 @@
     "**/*.ts",
     "**/*.tsx",
     ".next/types/**/*.ts"
-, "app/map/_components/category-filter.tsx"  ],
+, "app/(tabs)/map/_components/category-filter.tsx"  ],
   "exclude": [
     "node_modules"
   ]

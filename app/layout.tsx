@@ -279,8 +279,12 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={poppins.className}>
-        {children}
-        <Toaster position="top-center" />
+        <div className="flex flex-row justify-center">
+          <div className="w-full lg:w-[480px] relative overflow-hidden border border-gray-300">
+            {children}
+            <Toaster position="top-center" />
+          </div>
+        </div>
       </body>
     </html>
   );

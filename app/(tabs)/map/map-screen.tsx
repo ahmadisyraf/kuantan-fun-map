@@ -13,14 +13,11 @@ import { CategoryType } from "@/types/category";
 import { PlaceType } from "@/types/place";
 import { categories } from "@/constants/categories";
 import { distance } from "@turf/distance";
-import { useSearchParams } from "next/navigation";
-import Image from "next/image";
 import GeolocationButton from "./_components/geolocation-button";
 import ShowCardButton from "./_components/show-card-button";
 import PlaceCard from "./_components/place-card";
-import ShowFilterButton from "./_components/show-filter-button";
-import CategoryFilter from "./_components/category-filter";
-import UserButton from "./_components/user-button";
+import CategoryTab from "./_components/category-tab";
+import { useSearchParams } from "next/navigation";
 
 export default function MapScreen({ places }: { places: PlaceType[] }) {
   const mapContainer = useRef<HTMLDivElement | null>(null);
@@ -33,16 +30,13 @@ export default function MapScreen({ places }: { places: PlaceType[] }) {
     lat: number;
     lng: number;
   } | null>();
-  const [showFilter, setShowFilter] = useState<boolean>(false);
 
   const searchParams = useSearchParams();
-
-  const selectedCategory = searchParams.get("category") as CategoryType;
+  const categoryParam = searchParams.get("category") as CategoryType;
 
   const renderClusterMarkers = (map: Map) => {
-    // Remove old cluster markers
     clusterMarkers.current.forEach((marker) => marker.remove());
-    clusterMarkers.current = []; // Reset clusterMarkers
+    clusterMarkers.current = [];
 
     const source = map.getSource("places") as GeoJSONSource;
     if (!source || !map.isSourceLoaded("places")) return;
@@ -66,7 +60,6 @@ export default function MapScreen({ places }: { places: PlaceType[] }) {
             {point_count}
           </div>
 
-          {/* Icon */}
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img
             src="/icons/more.png"
@@ -93,6 +86,7 @@ export default function MapScreen({ places }: { places: PlaceType[] }) {
       center: [103.3256, 3.818],
       zoom: 12,
       minZoom: 12,
+      attributionControl: false,
     });
 
     const map = mapRef.current;
@@ -105,7 +99,6 @@ export default function MapScreen({ places }: { places: PlaceType[] }) {
           const blob = await response.blob();
           const imageBitmap = await createImageBitmap(blob);
 
-          // Add image if not exist
           if (!map.hasImage(category)) {
             map.addImage(category, imageBitmap);
           }
@@ -133,7 +126,6 @@ export default function MapScreen({ places }: { places: PlaceType[] }) {
         clusterMaxZoom: 15,
       });
 
-      // Add unclustered point layer
       map.addLayer({
         id: "unclustered-point",
         type: "symbol",
@@ -170,18 +162,15 @@ export default function MapScreen({ places }: { places: PlaceType[] }) {
 
             if (cardElement) {
               cardElement.scrollIntoView({
-                behavior: "smooth",
+                behavior: "instant",
                 inline: "center",
                 block: "nearest",
               });
             }
 
-            // Fly to point
-            map.flyTo({
-              center: coords,
+            map.jumpTo({
               zoom: 18,
-              speed: 1.2,
-              curve: 1.4,
+              center: coords,
             });
           }
         }
@@ -195,7 +184,6 @@ export default function MapScreen({ places }: { places: PlaceType[] }) {
         map.getCanvas().style.cursor = "";
       });
 
-      // Render clusters when data source is ready
       map.on("data", (e) => {
         if (
           "sourceId" in e &&
@@ -216,69 +204,98 @@ export default function MapScreen({ places }: { places: PlaceType[] }) {
       });
     });
 
+    const observer = new IntersectionObserver(
+      (entries) => {
+        for (const entry of entries) {
+          if (entry.isIntersecting && entry.intersectionRatio >= 0.8) {
+            const index = Number(entry.target.getAttribute("data-index"));
+            const place = places[index];
+            if (place) {
+              setSelectedPlace((prev) =>
+                prev?.name === place.name ? prev : place
+              );
+
+              map.jumpTo({
+                zoom: 18,
+                center: [place.lng, place.lat],
+              });
+            }
+            break;
+          }
+        }
+      },
+      {
+        threshold: 0.9,
+        root: document.querySelector(".scroll-container"),
+      }
+    );
+
+    const elements = Object.entries(placeRefs.current);
+    for (const [index, el] of elements) {
+      if (el) {
+        el.setAttribute("data-index", index);
+        observer.observe(el);
+      }
+    }
+
     return () => {
       clusterMarkers.current.forEach((marker) => marker.remove());
+      observer.disconnect();
       map.remove();
     };
   }, [places]);
 
-  return (
-    <div className="w-full h-dvh">
-      {/* Fun map logo top left */}
-      <div className="absolute z-20 w-32 h-32 lg:w-32 lg:h-32 -top-5 lg:-top-5 left-3">
-        <Image
-          src="/logo/kuantan-fun-map-2.png"
-          alt="Kuantan Fun Map Logo"
-          priority={true}
-          fill
-        />
-      </div>
+  useEffect(() => {
+    setSelectedPlace(places[0]);
+    placeRefs.current[0]?.scrollIntoView({
+      behavior: "instant",
+      block: "nearest",
+      inline: "start",
+    });
+  }, [categoryParam]);
 
+  return (
+    <div className="w-full h-[92dvh] relative">
+      <div className="sticky top-0 z-10 w-full">
+        <CategoryTab />
+      </div>
       <div
         className={`absolute pointer-events-none bottom-5 left-0 right-0 z-10 transition-transform duration-500 ${
-          showCard ? "translate-y-0" : " translate-y-2/3"
+          showCard ? "translate-y-0" : " translate-y-2/4"
         }`}
       >
         <div className="flex flex-col space-y-2 relative px-4">
-          <UserButton />
           <GeolocationButton {...{ setUserLocation }} />
-          <div className="flex flex-row items-center relative">
-            <ShowCardButton {...{ showCard, setShowCard }} />
-            <div className="flex flex-row items-center space-x-2">
-              <CategoryFilter {...{ showFilter, selectedCategory }} />
-              <ShowFilterButton
-                {...{ showFilter, setShowFilter, selectedCategory }}
-              />
-            </div>
-          </div>
+          <ShowCardButton {...{ showCard, setShowCard }} />
         </div>
 
         {/* Place card lists  */}
-        <div className="flex gap-4 overflow-x-auto px-4 pb-5 pt-5 no-scrollbar pr-6 pointer-events-auto">
-          {places.map((place, index) => {
-            const placeDistance = userLocation
-              ? distance(
-                  [userLocation.lng, userLocation.lat],
-                  [place.lng, place.lat],
-                  { units: "kilometers" }
-                )
-              : null;
-
-            return (
+        <div className="flex gap-4 overflow-x-auto px-4 pb-3 pt-5 no-scrollbar pr-6 pointer-events-auto snap-x snap-mandatory">
+          {places.map((place, index) => (
+            <div
+              className="snap-center snap-always"
+              key={index}
+              data-index={index}
+            >
               <PlaceCard
-                key={index}
                 {...{
                   index,
                   mapRef,
                   place,
-                  placeDistance,
+                  placeDistance: userLocation
+                    ? distance(
+                        [userLocation.lng, userLocation.lat],
+                        [place.lng, place.lat],
+                        { units: "kilometers" }
+                      )
+                    : null,
                   placeRefs,
                   selectedPlace,
                   setSelectedPlace,
                 }}
               />
-            );
-          })}
+            </div>
+          ))}
         </div>
       </div>
 

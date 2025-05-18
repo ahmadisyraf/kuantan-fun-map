@@ -41,10 +41,10 @@ export default function PlaceScreen({ place }: { place: PlaceType }) {
   }, [api]);
 
   return (
-    <div className="w-full flex flex-row items-center justify-center py-10 px-5">
-      <Card className="w-full shadow-[0_6px_0_rgba(0,0,0,1)] max-w-xl">
+    <div className="py-10 px-5 flex flex-row justify-center">
+      <Card className="w-full h-full shadow-[0_6px_0_rgba(0,0,0,1)] max-w-xl">
         <CardHeader>
-          <CardTitle className="text-lg">{place.name}</CardTitle>
+          <CardTitle className="text-xl">{place.name}</CardTitle>
           <CardDescription className="text-sm">{place.address}</CardDescription>
         </CardHeader>
         <CardContent className="py-5">

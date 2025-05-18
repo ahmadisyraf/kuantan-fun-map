@@ -52,11 +52,11 @@ export default function PlaceCard({
 
         const map = mapRef.current;
         if (map) {
-          map.flyTo({
+          map.jumpTo({
             center: [place.lng, place.lat],
             zoom: 18,
-            speed: 1.2,
-            curve: 1.4,
+            // speed: 1.2,
+            // curve: 1.4,
           });
         }
       }}
