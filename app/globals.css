@@ -3,24 +3,18 @@
 @tailwind utilities;
 
 :root {
-  padding: 0;
-  margin: 0;
   --background: #ffffff;
   --foreground: #171717;
 }
 
-/* @media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
-} */
+html {
+  overscroll-behavior-y: none;
+}
 
 body {
   color: var(--foreground);
   background: var(--background);
   font-family: Arial, Helvetica, sans-serif;
-  overscroll-behavior-y: none;
 }
 
 @layer utilities {
@@ -41,3 +35,10 @@ body {
     padding-top: env(safe-area-inset-top);
   }
 }
+
+/* @media (prefers-color-scheme: dark) {
+  :root {
+    --background: #0a0a0a;
+    --foreground: #ededed;
+  }
+} */
