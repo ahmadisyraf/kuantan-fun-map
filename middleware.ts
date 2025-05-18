@@ -14,5 +14,5 @@ export async function middleware(request: NextRequest) {
 }
 
 export const config = {
-  matcher: ["/add-place"], // Specify the routes the middleware applies to
+  matcher: ["/add-place",], // Specify the routes the middleware applies to
 };

@@ -1,12 +1,12 @@
 export const categories = [
-    "Mall",
-    "Mosque",
-    "Museum",
-    "Riverfront",
-    "Zoo",
-    "Park",
-    "Beach",
-    "Cafe",
-    "Castle",
-    "Landmark",
-  ] as const;
+  "Cafe",
+  "Mall",
+  "Mosque",
+  "Museum",
+  "Riverfront",
+  "Zoo",
+  "Park",
+  "Beach",
+  "Castle",
+  "Landmark",
+] as const;
