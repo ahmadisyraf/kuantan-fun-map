@@ -3,6 +3,8 @@
 @tailwind utilities;
 
 :root {
+  padding: 0;
+  margin: 0;
   --background: #ffffff;
   --foreground: #171717;
 }
@@ -28,7 +30,10 @@ body {
     display: none;
   }
   .no-scrollbar {
-    -ms-overflow-style: none;  /* IE and Edge */
-    scrollbar-width: none;  /* Firefox */
+    -ms-overflow-style: none; /* IE and Edge */
+    scrollbar-width: none; /* Firefox */
+  }
+  .pb-safe {
+    padding-bottom: env(safe-area-inset-bottom);
   }
 }
