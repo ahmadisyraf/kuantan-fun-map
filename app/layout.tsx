@@ -263,12 +263,12 @@ export const metadata: Metadata = {
       },
     ],
   },
-  // other: { "apple-mobile-web-app-capable": "yes" },
 };
 
 export const viewport: Viewport = {
-  userScalable: false,
-  maximumScale: 1,
+  viewportFit: "cover",
+  initialScale: 1,
+  width: "device-width",
 };
 
 export default function RootLayout({
@@ -278,7 +278,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={poppins.className + " pb-safe"}>
+      <body className={poppins.className + "pb-safe"}>
         <div className="flex flex-row justify-center">
           <div className="w-full lg:w-[480px] relative overflow-hidden border border-gray-300">
             {children}

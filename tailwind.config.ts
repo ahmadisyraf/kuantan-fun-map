@@ -13,9 +13,6 @@ const config: Config = {
         foreground: "var(--foreground)",
         brand: "#ffde59",
       },
-      padding: {
-        safe: "env(safe-area-inset-bottom)",
-      },
     },
   },
   plugins: [],
