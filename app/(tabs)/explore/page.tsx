@@ -1,9 +1,9 @@
 import { PlaceType } from "@/types/place";
-import MapScreen from "./map-screen";
+import ExploreScreen from "./explore-screen";
 import { CategoryType } from "@/types/category";
 import { getPlacesByCategory } from "@/lib/queries/get-places-by-category";
 
-export default async function Map({
+export default async function Explore({
   searchParams,
 }: {
   searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
@@ -13,5 +13,5 @@ export default async function Map({
     category ? category : "Cafe"
   )) as PlaceType[];
 
-  return <MapScreen {...{ places }} />;
+  return <ExploreScreen {...{ places }} />;
 }

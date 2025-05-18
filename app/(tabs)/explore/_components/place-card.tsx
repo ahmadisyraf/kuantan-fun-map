@@ -19,6 +19,7 @@ interface PlaceCardProps {
   setSelectedPlace: (place: PlaceType) => void;
   mapRef: RefObject<Map | null>;
   placeDistance: number | null;
+  setShowCard: (showCard: boolean) => void;
 }
 
 export default function PlaceCard({
@@ -29,6 +30,7 @@ export default function PlaceCard({
   setSelectedPlace,
   mapRef,
   placeDistance,
+  setShowCard,
 }: PlaceCardProps) {
   return (
     <Card
@@ -44,6 +46,7 @@ export default function PlaceCard({
       }`}
       onClick={() => {
         setSelectedPlace(place);
+        setShowCard(true);
         placeRefs.current?.[index]?.scrollIntoView({
           behavior: "smooth",
           inline: "center",

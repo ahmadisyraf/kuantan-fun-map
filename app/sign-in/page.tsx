@@ -30,7 +30,7 @@ export default function SignIn() {
                    * A URL to redirect after the user authenticates with the provider
                    * @default "/"
                    */
-                  callbackURL: "/map",
+                  callbackURL: "/explore",
                   /**
                    * A URL to redirect if an error occurs during the sign in process
                    */
@@ -38,7 +38,7 @@ export default function SignIn() {
                   /**
                    * A URL to redirect if the user is newly registered
                    */
-                  newUserCallbackURL: "/map",
+                  newUserCallbackURL: "/explore",
                 });
               }}
             >
