@@ -278,7 +278,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={poppins.className + "pb-safe"}>
+      <body className={poppins.className}>
         <div className="flex flex-row justify-center">
           <div className="w-full lg:w-[480px] relative overflow-hidden border border-gray-300">
             {children}
