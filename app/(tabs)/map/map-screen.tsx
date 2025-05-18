@@ -257,7 +257,7 @@ export default function MapScreen({ places }: { places: PlaceType[] }) {
 
   return (
     <div className="w-full h-[calc(100dvh-80px-env(safe-area-inset-bottom))] relative">
-      <div className="absolute w-full top-10 px-5 z-10 overflow-x-auto no-scrollbar">
+      <div className="absolute w-full top-[calc(20px+env(safe-area-inset-top))] px-5 z-10 overflow-x-auto no-scrollbar">
         <CategoryTab />
       </div>
       <div
