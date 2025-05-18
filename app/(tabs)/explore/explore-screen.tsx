@@ -19,7 +19,7 @@ import PlaceCard from "./_components/place-card";
 import CategoryTab from "./_components/category-tab";
 import { useSearchParams } from "next/navigation";
 
-export default function MapScreen({ places }: { places: PlaceType[] }) {
+export default function ExploreScreen({ places }: { places: PlaceType[] }) {
   const mapContainer = useRef<HTMLDivElement | null>(null);
   const mapRef = useRef<Map | null>(null);
   const clusterMarkers = useRef<Marker[]>([]);
@@ -256,7 +256,7 @@ export default function MapScreen({ places }: { places: PlaceType[] }) {
   }, [categoryParam]);
 
   return (
-    <div className="w-full h-[calc(100dvh-80px-env(safe-area-inset-bottom))] relative">
+    <div className="w-full h-[calc(100dvh-10dvh-env(safe-area-inset-bottom))] relative">
       <div className="absolute w-full top-[calc(20px+env(safe-area-inset-top))] px-5 z-10 overflow-x-auto no-scrollbar">
         <CategoryTab />
       </div>
@@ -293,6 +293,7 @@ export default function MapScreen({ places }: { places: PlaceType[] }) {
                   placeRefs,
                   selectedPlace,
                   setSelectedPlace,
+                  setShowCard
                 }}
               />
             </div>
