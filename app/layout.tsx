@@ -263,7 +263,7 @@ export const metadata: Metadata = {
       },
     ],
   },
-  other: { "apple-mobile-web-app-capable": "yes" },
+  // other: { "apple-mobile-web-app-capable": "yes" },
 };
 
 export const viewport: Viewport = {
@@ -280,7 +280,7 @@ export default function RootLayout({
     <html lang="en">
       <body className={poppins.className}>
         <div className="flex flex-row justify-center">
-          <div className="w-full lg:w-[480px] relative overflow-hidden border border-gray-300">
+          <div className="w-full lg:w-[480px] relative overflow-hidden border border-gray-300 pb-safe">
             {children}
             <Toaster position="top-center" />
           </div>

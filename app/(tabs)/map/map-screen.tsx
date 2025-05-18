@@ -53,6 +53,7 @@ export default function MapScreen({ places }: { places: PlaceType[] }) {
       ];
 
       const container = document.createElement("div");
+
       createRoot(container).render(
         <div className="relative w-10 h-10 hover:scale-110">
           {/* Badge */}
@@ -255,8 +256,8 @@ export default function MapScreen({ places }: { places: PlaceType[] }) {
   }, [categoryParam]);
 
   return (
-    <div className="w-full h-[92dvh] relative">
-      <div className="sticky top-0 z-10 w-full">
+    <div className="w-full h-[90dvh] relative">
+      <div className="absolute w-full top-6 px-5 z-10 overflow-x-auto no-scrollbar">
         <CategoryTab />
       </div>
       <div
