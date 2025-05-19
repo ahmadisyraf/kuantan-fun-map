@@ -1,5 +1,6 @@
 import { IconButton } from "@/components/ui/icon-button";
 import { customToast } from "@/components/ui/toast";
+import { cn } from "@/utils/cn";
 import { LocateFixed } from "lucide-react";
 
 interface Coordinates {
@@ -8,15 +9,20 @@ interface Coordinates {
 }
 
 interface GeolocationButtonProps {
+  userLocation: Coordinates | null | undefined;
   setUserLocation: (coordinates: Coordinates) => void;
 }
 
 export default function GeolocationButton({
+  userLocation,
   setUserLocation,
 }: GeolocationButtonProps) {
   return (
     <IconButton
-      className="pointer-events-auto w-fit"
+      className={cn(
+        "pointer-events-auto w-fit",
+        userLocation !== null && "bg-brand"
+      )}
       onClick={() => {
         navigator.geolocation.getCurrentPosition(
           (geo) => {

@@ -186,6 +186,7 @@ export default function PlaceSearch() {
     const photos = place.photos?.map((p) => p.getUrl()) || [];
 
     return {
+      id: 0,
       name: place.name || "",
       address: place.formatted_address || "",
       lat: place.geometry?.location?.lat() || 0,
@@ -203,6 +204,7 @@ export default function PlaceSearch() {
       start();
 
       await addPlace({
+        id: 0,
         name: data.name,
         address: data.address,
         category: data.category,

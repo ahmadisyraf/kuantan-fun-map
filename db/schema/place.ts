@@ -9,6 +9,7 @@ import {
 } from "drizzle-orm/pg-core";
 import { user } from "./user";
 import { relations } from "drizzle-orm";
+import { favourite } from "./favourite";
 
 export const place = pgTable("place", {
   id: integer().primaryKey().generatedAlwaysAsIdentity(),
@@ -30,4 +31,8 @@ export const placeToUserRelationship = relations(place, ({ one }) => ({
     fields: [place.userId],
     references: [user.id],
   }),
+}));
+
+export const placeToFavouriteRelationship = relations(place, ({ one }) => ({
+  favourite: one(favourite),
 }));

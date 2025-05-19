@@ -279,10 +279,18 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={poppins.className}>
-        <div className="flex flex-row justify-center">
-          <div className="w-full lg:w-[480px] relative overflow-hidden border border-gray-300">
+        <div className="flex flex-row justify-center relative">
+          <div className="w-full lg:w-[480px] relative overflow-hidden lg:border lg:border-gray-300">
             {children}
-            <Toaster position="top-center" />
+            <Toaster
+              toastOptions={{
+                style: {
+                  width: "100%",
+                  marginTop: "calc(10px + env(safe-area-inset-top))",
+                },
+              }}
+              position="top-center"
+            />
           </div>
         </div>
       </body>

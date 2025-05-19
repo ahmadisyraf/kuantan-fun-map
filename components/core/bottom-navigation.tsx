@@ -1,15 +1,15 @@
 "use client";
 
-import { Heart, LayoutList, Map, QrCode, User } from "lucide-react";
+import { CircleUser, Heart, LayoutList, Map, QrCode } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 
 const navItems = [
   { icon: Map, label: "Explore", value: "/explore" },
   { icon: LayoutList, label: "Itenaries", value: "#" },
-  { icon: QrCode, label: "Scan QR Code", value: "#" },
+  { icon: QrCode, label: "Scan", value: "#" },
   { icon: Heart, label: "Favorites", value: "#" },
-  { icon: User, label: "Profile", value: "/profile" },
+  { icon: CircleUser, label: "Profile", value: "/profile" },
 ];
 
 export default function BottomNavigation() {
@@ -21,10 +21,14 @@ export default function BottomNavigation() {
           <li key={index}>
             <Link href={value}>
               <button
-                className={`flex flex-col items-center justify-center w-full py-3 transition-all font-semibold text-black h-full ${pathname === value && "bg-brand"}`}
+                className={`flex flex-col items-center justify-center w-full py-3 transition-all font-semibold h-full gap-1`}
                 aria-label={label}
               >
-                <Icon className="w-6 h-6" />
+                <Icon
+                  className="w-6 h-6"
+                  {...(pathname === value && { fill: "#ffde59" })}
+                />
+                <span className="text-xs font-medium">{label}</span>
               </button>
             </Link>
           </li>
