@@ -263,6 +263,18 @@ export default function ExploreScreen({
     });
   }, [categoryParam]);
 
+  useEffect(() => {
+    navigator.geolocation.getCurrentPosition((geo) => {
+      console.log(
+        `latitude: ${geo.coords.latitude}, longitude: ${geo.coords.longitude}`
+      );
+      setUserLocation({
+        lat: geo.coords.latitude,
+        lng: geo.coords.longitude,
+      });
+    });
+  }, []);
+
   return (
     <TabsSafeZone>
       <div className="absolute w-full top-[calc(20px+env(safe-area-inset-top))] px-5 z-10 overflow-x-auto no-scrollbar">
