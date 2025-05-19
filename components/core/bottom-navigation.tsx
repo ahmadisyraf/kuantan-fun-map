@@ -21,7 +21,7 @@ export default function BottomNavigation() {
           <li key={index}>
             <Link href={value}>
               <button
-                className={`flex flex-col items-center justify-center w-full py-3 transition-all font-semibold h-full gap-1`}
+                className={`flex flex-col items-center justify-center w-full py-2 transition-all font-semibold h-full gap-1`}
                 aria-label={label}
               >
                 <Icon

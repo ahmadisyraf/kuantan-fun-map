@@ -285,7 +285,8 @@ export default function RootLayout({
             <Toaster
               toastOptions={{
                 style: {
-                  width: "100%",
+                  width:
+                    "calc(100vw - env(safe-area-inset-right) - env(safe-area-inset-left))",
                   marginTop: "calc(10px + env(safe-area-inset-top))",
                 },
               }}
