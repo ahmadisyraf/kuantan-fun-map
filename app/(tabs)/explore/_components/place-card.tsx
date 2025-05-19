@@ -7,9 +7,13 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { PlaceType } from "@/types/place";
+import { Heart } from "lucide-react";
 import { Map } from "maplibre-gl";
 import Link from "next/link";
 import { RefObject } from "react";
+import { addToFavourite, removeFromFavourite } from "../_lib/action";
+import { toastPromise } from "@/components/ui/toast";
+import { FavouriteType } from "@/types/favourite";
 
 interface PlaceCardProps {
   index: number;
@@ -20,6 +24,7 @@ interface PlaceCardProps {
   mapRef: RefObject<Map | null>;
   placeDistance: number | null;
   setShowCard: (showCard: boolean) => void;
+  favourite: FavouriteType | undefined;
 }
 
 export default function PlaceCard({
@@ -31,6 +36,7 @@ export default function PlaceCard({
   mapRef,
   placeDistance,
   setShowCard,
+  favourite,
 }: PlaceCardProps) {
   return (
     <Card
@@ -58,8 +64,6 @@ export default function PlaceCard({
           map.jumpTo({
             center: [place.lng, place.lat],
             zoom: 18,
-            // speed: 1.2,
-            // curve: 1.4,
           });
         }
       }}
@@ -77,13 +81,46 @@ export default function PlaceCard({
           )}
         </CardDescription>
       </CardHeader>
-      <CardFooter>
+      <CardFooter className="grid grid-cols-5 gap-1">
         <Link
           href={`/place/${place.slug}`}
           onClick={(e) => e.stopPropagation()}
+          className="col-span-4"
         >
           <Button className="w-full">View details</Button>
         </Link>
+        <Button
+          className="col-span-1 flex flex-row items-center justify-center p-0"
+          onClick={() => {
+            if (favourite) {
+              const promise = async () => {
+                await removeFromFavourite(favourite.id);
+              };
+
+              toastPromise(promise, {
+                loading: "Removing place from your favourite",
+                success: () => "Place has been removed",
+                error: "Opps, Something went wrong",
+              });
+            } else {
+              const promise = async () => {
+                await addToFavourite({ placeId: place.id });
+              };
+
+              toastPromise(promise, {
+                loading: "Adding to your favourites",
+                success: () => "Added to your favourites",
+                error: "Opps, Something went wrong",
+              });
+            }
+          }}
+        >
+          <Heart
+            size={17}
+            strokeWidth={2.5}
+            {...(favourite && { fill: "red" })}
+          />
+        </Button>
       </CardFooter>
     </Card>
   );

@@ -25,7 +25,7 @@ function Toast({ title, status }: ToastProps) {
 
   return (
     <div
-      className={`w-full md:max-w-[380px] border-2 border-black p-4 rounded-lg shadow-[0_6px_0_rgba(0,0,0,1)] ${getBgColor()}`}
+      className={`w-full border-2 border-black p-4 rounded-lg shadow-[0_6px_0_rgba(0,0,0,1)] ${getBgColor()}`}
     >
       <span className="text-sm font-semibold flex flex-row items-center gap-3">
         {title}

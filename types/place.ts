@@ -1,6 +1,7 @@
 import { CategoryType } from "./category";
 
 export type PlaceType = {
+  id: number;
   name: string;
   address: string;
   lat: number;

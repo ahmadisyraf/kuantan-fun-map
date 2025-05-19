@@ -1,12 +1,11 @@
 "use server";
 
-import slugify from "slugify";
 import { db } from "@/db";
 import { place } from "@/db/schema/place";
-import { PlaceType } from "@/types/place";
 import { revalidateTag } from "next/cache";
 import { auth } from "@/lib/auth";
 import { headers } from "next/headers";
+import { PlaceType } from "@/types/place";
 
 export async function addPlace({
   name,
@@ -17,6 +16,7 @@ export async function addPlace({
   photos,
   openingHours,
   url,
+  slug,
 }: PlaceType) {
   const session = await auth.api.getSession({
     headers: await headers(),
@@ -34,7 +34,7 @@ export async function addPlace({
     photos,
     category,
     openingHours,
-    slug: slugify(name, { lower: true, remove: /[@]/g }),
+    slug,
     url,
     userId: session.user.id,
   });

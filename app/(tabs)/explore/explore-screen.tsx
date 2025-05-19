@@ -18,8 +18,16 @@ import ShowCardButton from "./_components/show-card-button";
 import PlaceCard from "./_components/place-card";
 import CategoryTab from "./_components/category-tab";
 import { useSearchParams } from "next/navigation";
+import TabsSafeZone from "@/components/core/tabs-safe-zone";
+import { FavouriteType } from "@/types/favourite";
 
-export default function ExploreScreen({ places }: { places: PlaceType[] }) {
+export default function ExploreScreen({
+  places,
+  favourites,
+}: {
+  places: PlaceType[];
+  favourites: FavouriteType[];
+}) {
   const mapContainer = useRef<HTMLDivElement | null>(null);
   const mapRef = useRef<Map | null>(null);
   const clusterMarkers = useRef<Marker[]>([]);
@@ -256,7 +264,7 @@ export default function ExploreScreen({ places }: { places: PlaceType[] }) {
   }, [categoryParam]);
 
   return (
-    <div className="w-full h-[calc(100dvh-10dvh-env(safe-area-inset-bottom))] relative">
+    <TabsSafeZone>
       <div className="absolute w-full top-[calc(20px+env(safe-area-inset-top))] px-5 z-10 overflow-x-auto no-scrollbar">
         <CategoryTab />
       </div>
@@ -266,7 +274,7 @@ export default function ExploreScreen({ places }: { places: PlaceType[] }) {
         }`}
       >
         <div className="flex flex-col space-y-2 relative px-4">
-          <GeolocationButton {...{ setUserLocation }} />
+          <GeolocationButton {...{ setUserLocation, userLocation }} />
           <ShowCardButton {...{ showCard, setShowCard }} />
         </div>
 
@@ -293,7 +301,10 @@ export default function ExploreScreen({ places }: { places: PlaceType[] }) {
                   placeRefs,
                   selectedPlace,
                   setSelectedPlace,
-                  setShowCard
+                  setShowCard,
+                  favourite: favourites.find(
+                    (favourite) => favourite.placeId === place.id
+                  ),
                 }}
               />
             </div>
@@ -303,6 +314,6 @@ export default function ExploreScreen({ places }: { places: PlaceType[] }) {
 
       {/* Render map here */}
       <div ref={mapContainer} className="w-full h-full" />
-    </div>
+    </TabsSafeZone>
   );
 }
