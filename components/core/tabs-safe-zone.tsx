@@ -12,7 +12,7 @@ const TabsSafeZone = forwardRef<HTMLDivElement, TabsSafeZoneProps>(
         ref={ref}
         // className={cn("py-[calc(40px+env(safe-area-inset-top))] px-5", className)}
         className={cn(
-          "w-full h-[calc(100dvh-8dvh-env(safe-area-inset-bottom))] relative",
+          "w-full h-[calc(100dvh-64px-env(safe-area-inset-bottom))] relative",
           className
         )}
         {...props}
