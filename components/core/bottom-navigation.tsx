@@ -15,7 +15,7 @@ const navItems = [
 export default function BottomNavigation() {
   const pathname = usePathname();
   return (
-    <nav className="sticky bottom-0 left-0 right-0 z-50 bg-white h-full">
+    <nav className="sticky bottom-0 left-0 right-0 z-50 h-full">
       <ul className="grid grid-cols-5 text-sm text-center h-full">
         {navItems.map(({ icon: Icon, label, value }, index) => (
           <li key={index}>
