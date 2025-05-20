@@ -22,6 +22,7 @@
     "@radix-ui/react-tabs": "^1.1.11",
     "@turf/distance": "^7.2.0",
     "@vis.gl/react-google-maps": "^1.5.2",
+    "@yudiel/react-qr-scanner": "^2.3.1",
     "better-auth": "^1.2.7",
     "clsx": "^2.1.1",
     "date-fns": "^4.1.0",

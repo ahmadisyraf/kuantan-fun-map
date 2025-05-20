@@ -7,7 +7,7 @@ import { usePathname } from "next/navigation";
 const navItems = [
   { icon: Map, label: "Explore", value: "/explore" },
   { icon: LayoutList, label: "Itenaries", value: "#" },
-  { icon: QrCode, label: "Scan", value: "#" },
+  { icon: QrCode, label: "Scan", value: "/qr-code" },
   { icon: Heart, label: "Favorites", value: "#" },
   { icon: CircleUser, label: "Profile", value: "/profile" },
 ];
