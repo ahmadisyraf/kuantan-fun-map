@@ -19,7 +19,6 @@ import PlaceCard from "./_components/place-card";
 import CategoryTab from "./_components/category-tab";
 import { useSearchParams } from "next/navigation";
 import { FavouriteType } from "@/types/favourite";
-import { Button } from "@/components/ui/button";
 import { IconButton } from "@/components/ui/icon-button";
 import { Plus } from "lucide-react";
 
