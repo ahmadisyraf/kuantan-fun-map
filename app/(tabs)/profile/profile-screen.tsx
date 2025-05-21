@@ -1,6 +1,5 @@
 "use client";
 
-import TabsSafeZone from "@/components/core/tabs-safe-zone";
 import { Button } from "@/components/ui/button";
 import { authClient } from "@/lib/auth-client";
 import { useRouter } from "next/navigation";
@@ -9,7 +8,7 @@ export default function ProfileScreen({ name }: { name: string }) {
   const router = useRouter();
 
   return (
-    <TabsSafeZone className="space-y-5 py-[calc(40px+env(safe-area-inset-top))] px-5">
+    <div className="space-y-5 py-[calc(40px+env(safe-area-inset-top))] px-5">
       <div className="">
         <h1 className="text-2xl font-semibold truncate">{name}</h1>
       </div>
@@ -27,6 +26,6 @@ export default function ProfileScreen({ name }: { name: string }) {
       >
         Sign out
       </Button>
-    </TabsSafeZone>
+    </div>
   );
 }
