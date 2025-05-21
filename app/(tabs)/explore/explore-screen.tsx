@@ -18,8 +18,10 @@ import ShowCardButton from "./_components/show-card-button";
 import PlaceCard from "./_components/place-card";
 import CategoryTab from "./_components/category-tab";
 import { useSearchParams } from "next/navigation";
-import TabsSafeZone from "@/components/core/tabs-safe-zone";
 import { FavouriteType } from "@/types/favourite";
+import { Button } from "@/components/ui/button";
+import { IconButton } from "@/components/ui/icon-button";
+import { Plus } from "lucide-react";
 
 export default function ExploreScreen({
   places,
@@ -276,7 +278,7 @@ export default function ExploreScreen({
   }, []);
 
   return (
-    <TabsSafeZone>
+    <div className="w-full h-full relative">
       <div className="absolute w-full top-[calc(20px+env(safe-area-inset-top))] px-5 z-10 overflow-x-auto no-scrollbar">
         <CategoryTab />
       </div>
@@ -290,7 +292,7 @@ export default function ExploreScreen({
           <ShowCardButton {...{ showCard, setShowCard }} />
         </div>
 
-        {/* Place card lists  */}
+        {/* Place card lists */}
         <div className="flex gap-4 overflow-x-auto px-4 pb-3 pt-5 no-scrollbar pr-6 pointer-events-auto snap-x snap-mandatory">
           {places.map((place, index) => (
             <div
@@ -321,11 +323,19 @@ export default function ExploreScreen({
               />
             </div>
           ))}
+
+          {/* Add new place card */}
+          <div className="min-w-[250px] max-w-[250px] flex flex-col justify-center items-center snap-center snap-always gap-2">
+            <IconButton>
+              <Plus size={18} />
+            </IconButton>
+            <p className="font-medium text-sm">Add more place</p>
+          </div>
         </div>
       </div>
 
       {/* Render map here */}
       <div ref={mapContainer} className="w-full h-full" />
-    </TabsSafeZone>
+    </div>
   );
 }
