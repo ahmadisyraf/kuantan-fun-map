@@ -9,7 +9,7 @@ Built using Next.js, MapLibre, Tailwind CSS, and enhanced with PWA support, the 
 Clone the project
 
 ```bash
-git clone https://github.com/your-username/kuantan-fun-map.git
+git clone https://github.com/ahmadisyraf/kuantan-fun-map.git
 ```
 
 Install the dependencies
