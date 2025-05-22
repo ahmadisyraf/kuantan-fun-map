@@ -21,7 +21,7 @@ export default function GeolocationButton({
     <IconButton
       className={cn(
         "pointer-events-auto w-fit",
-        userLocation !== null && "bg-brand"
+        userLocation !== null && "bg-primary"
       )}
       onClick={() => {
         navigator.geolocation.getCurrentPosition(

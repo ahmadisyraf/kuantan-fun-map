@@ -21,6 +21,7 @@ import { useSearchParams } from "next/navigation";
 import { FavouriteType } from "@/types/favourite";
 import { IconButton } from "@/components/ui/icon-button";
 import { Plus } from "lucide-react";
+import Link from "next/link";
 
 export default function ExploreScreen({
   places,
@@ -41,7 +42,8 @@ export default function ExploreScreen({
   } | null>();
 
   const searchParams = useSearchParams();
-  const categoryParam = searchParams.get("category") as CategoryType;
+  const categoryParam =
+    searchParams.get("category") || ("Cafe" as CategoryType);
 
   const renderClusterMarkers = (map: Map) => {
     clusterMarkers.current.forEach((marker) => marker.remove());
@@ -325,9 +327,11 @@ export default function ExploreScreen({
 
           {/* Add new place card */}
           <div className="min-w-[250px] max-w-[250px] flex flex-col justify-center items-center snap-center snap-always gap-2">
-            <IconButton>
-              <Plus size={18} />
-            </IconButton>
+            <Link href={`/add-place?category=${categoryParam}`}>
+              <IconButton>
+                <Plus size={18} />
+              </IconButton>
+            </Link>
             <p className="font-medium text-sm">Add more place</p>
           </div>
         </div>

@@ -51,7 +51,7 @@ export const ButtonGroupItem = React.forwardRef<
         "text-xs font-semibold px-3 py-1 border-[1.9px] uppercase rounded-full transition-all",
         context.value === value
           ? "bg-black text-white border-black"
-          : "bg-brand text-balck border-black",
+          : "bg-primary text-balck border-black",
         className
       )}
       {...props}
