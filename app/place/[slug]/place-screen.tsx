@@ -65,7 +65,7 @@ export default function PlaceScreen({ place }: { place: PlaceType }) {
                 </CarouselContent>
 
                 {/* Slide Count */}
-                <div className="absolute top-5 right-5 text-sm text-muted-foreground border-[1.9px] border-black rounded-lg bg-brand px-3 py-1">
+                <div className="absolute top-5 right-5 text-sm text-muted-foreground border-[1.9px] border-black rounded-lg bg-primary px-3 py-1">
                   Slide {current} of {count}
                 </div>
 

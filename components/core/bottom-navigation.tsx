@@ -1,12 +1,18 @@
 "use client";
 
-import { CircleUser, Heart, LayoutList, Map, QrCode } from "lucide-react";
+import {
+  CircleUser,
+  Heart,
+  Map,
+  QrCode,
+  Swords,
+} from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 
 const navItems = [
   { icon: Map, label: "Explore", value: "/explore" },
-  { icon: LayoutList, label: "Itenaries", value: "#" },
+  { icon: Swords, label: "Challange", value: "#" },
   { icon: QrCode, label: "Scan", value: "/qr-code" },
   { icon: Heart, label: "Favorites", value: "#" },
   { icon: CircleUser, label: "Profile", value: "/profile" },

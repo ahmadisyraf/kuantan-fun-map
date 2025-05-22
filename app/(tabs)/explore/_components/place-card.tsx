@@ -12,7 +12,6 @@ import { Map } from "maplibre-gl";
 import Link from "next/link";
 import { RefObject } from "react";
 import { addToFavourite, removeFromFavourite } from "../_lib/action";
-import { toastPromise } from "@/components/ui/toast";
 import { FavouriteType } from "@/types/favourite";
 
 interface PlaceCardProps {
@@ -68,7 +67,7 @@ export default function PlaceCard({
         }
       }}
     >
-      <div className="w-3 h-3 border-[1.9px] border-black bg-brand absolute top-3 right-3 rounded-full" />
+      <div className="w-3 h-3 border-[1.9px] border-black bg-primary absolute top-3 right-3 rounded-full" />
       <CardHeader>
         <CardTitle>{place.name}</CardTitle>
         <CardDescription className="flex flex-wrap items-center gap-x-1">
@@ -91,27 +90,11 @@ export default function PlaceCard({
         </Link>
         <Button
           className="col-span-1 flex flex-row items-center justify-center p-0"
-          onClick={() => {
+          onClick={async () => {
             if (favourite) {
-              const promise = async () => {
-                await removeFromFavourite(favourite.id);
-              };
-
-              toastPromise(promise, {
-                loading: "Removing place from your favourite",
-                success: () => "Place has been removed",
-                error: "Opps, Something went wrong",
-              });
+              await removeFromFavourite(favourite.id);
             } else {
-              const promise = async () => {
-                await addToFavourite({ placeId: place.id });
-              };
-
-              toastPromise(promise, {
-                loading: "Adding to your favourites",
-                success: () => "Added to your favourites",
-                error: "Opps, Something went wrong",
-              });
+              await addToFavourite({ placeId: place.id });
             }
           }}
         >

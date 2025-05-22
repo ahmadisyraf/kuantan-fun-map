@@ -11,7 +11,8 @@ const config: Config = {
       colors: {
         background: "var(--background)",
         foreground: "var(--foreground)",
-        brand: "#ffde59",
+        primary: "#ffde59",
+        secondary: "#2C2C2C",
       },
       padding: {
         safe: "env(safe-area-inset-bottom)",
