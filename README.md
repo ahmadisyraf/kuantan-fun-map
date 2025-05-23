@@ -16,7 +16,7 @@ Install the dependencies
 
 ```bash
 npm install
-```
+``` 
 
 Create a .env file at the root of your project and define your environment variables as shown below:
 
