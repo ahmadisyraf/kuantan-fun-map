@@ -8,7 +8,7 @@ const navItems = [
   { icon: Map, label: "Explore", value: "/explore" },
   { icon: LayoutList, label: "Itenaries", value: "#" },
   { icon: QrCode, label: "Scan", value: "/qr-code" },
-  { icon: Heart, label: "Favorites", value: "#" },
+  { icon: Heart, label: "Favorites", value: "/favourite" },
   { icon: CircleUser, label: "Profile", value: "/profile" },
 ];
 

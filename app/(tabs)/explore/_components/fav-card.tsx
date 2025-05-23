@@ -14,7 +14,6 @@ import { RefObject } from "react";
 import { addToFavourite, removeFromFavourite } from "../_lib/action";
 import { toastPromise } from "@/components/ui/toast";
 import { FavouriteType } from "@/types/favourite";
-import { useRouter } from "next/navigation";
 
 interface PlaceCardProps {
   index: number;
@@ -28,48 +27,42 @@ interface PlaceCardProps {
   favourite: FavouriteType | undefined;
 }
 
-export default function PlaceCard({
+export default function FavCard({
   index,
   place,
   placeRefs,
-  selectedPlace,
   setSelectedPlace,
   mapRef,
   placeDistance,
   setShowCard,
   favourite,
-
 }: PlaceCardProps) {
-  const router = useRouter();
   return (
+    // <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
     <Card
-      ref={(el) => {
-        if (el && placeRefs.current) {
-          placeRefs.current[index] = el;
-        }
-      }}
-      className={`h-full ${
-        selectedPlace?.name === place.name
-          ? "scale-[1.05] z-20 -translate-y-2 shadow-[0_6px_0_rgba(0,0,0,1)]"
-          : "hover:scale-[1.05] z-10"
-      }`}
-      onClick={() => {
-        setSelectedPlace(place);
-        setShowCard(true);
-        placeRefs.current?.[index]?.scrollIntoView({
-          behavior: "smooth",
-          inline: "center",
-          block: "nearest",
-        });
+     className="w-full mb-2 first:mt-0 last:mb-0"
+        ref={(el) => {
+            if (el && placeRefs.current) {
+            placeRefs.current[index] = el;
+            }
+        }}
+        onClick={() => {
+            setSelectedPlace(place);
+            setShowCard(true);
+            placeRefs.current?.[index]?.scrollIntoView({
+            behavior: "smooth",
+            inline: "center",
+            block: "nearest",
+            });
 
-        const map = mapRef.current;
-        if (map) {
-          map.jumpTo({
-            center: [place.lng, place.lat],
-            zoom: 18,
-          });
-        }
-      }}
+            const map = mapRef.current;
+            if (map) {
+            map.jumpTo({
+                center: [place.lng, place.lat],
+                zoom: 18,
+            });
+            }
+        }}
     >
       <div className="w-3 h-3 border-[1.9px] border-black bg-brand absolute top-3 right-3 rounded-full" />
       <CardHeader>
@@ -112,12 +105,7 @@ export default function PlaceCard({
 
               toastPromise(promise, {
                 loading: "Adding to your favourites",
-                  success: () => {
-                  setTimeout(() => {
-                    router.push("/favourite");
-                  }, 1500);
-                  return "Added to your favourites";
-                },
+                success: () => "Added to your favourites",
                 error: "Opps, Something went wrong",
               });
             }
@@ -131,5 +119,6 @@ export default function PlaceCard({
         </Button>
       </CardFooter>
     </Card>
+    // </div>
   );
 }
