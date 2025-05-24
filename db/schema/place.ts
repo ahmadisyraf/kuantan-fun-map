@@ -33,6 +33,6 @@ export const placeToUserRelationship = relations(place, ({ one }) => ({
   }),
 }));
 
-export const placeToFavouriteRelationship = relations(place, ({ one }) => ({
-  favourite: one(favourite),
+export const placeToFavouriteRelationship = relations(place, ({ many }) => ({
+  favourite: many(favourite),
 }));

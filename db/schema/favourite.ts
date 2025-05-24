@@ -6,7 +6,7 @@ import { place } from "./place";
 export const favourite = pgTable("favourite", {
   id: integer().primaryKey().generatedAlwaysAsIdentity(),
   createdAt: timestamp("created_at").defaultNow().notNull(),
-  placeId: integer("place_id").notNull().unique(),
+  placeId: integer("place_id").notNull(),
   userId: text("user_id").notNull(),
 });
 
