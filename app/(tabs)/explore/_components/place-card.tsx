@@ -7,12 +7,13 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { PlaceType } from "@/types/place";
-import { Heart } from "lucide-react";
+import { Heart, Loader2 } from "lucide-react";
 import { Map } from "maplibre-gl";
 import Link from "next/link";
 import { RefObject } from "react";
 import { addToFavourite, removeFromFavourite } from "../_lib/action";
 import { FavouriteType } from "@/types/favourite";
+import { useLoading } from "@/hooks/use-loading";
 
 interface PlaceCardProps {
   index: number;
@@ -37,6 +38,7 @@ export default function PlaceCard({
   setShowCard,
   favourite,
 }: PlaceCardProps) {
+  const { start, stop, loading } = useLoading();
   return (
     <Card
       ref={(el) => {
@@ -90,19 +92,27 @@ export default function PlaceCard({
         </Link>
         <Button
           className="col-span-1 flex flex-row items-center justify-center p-0"
+          disabled={loading}
           onClick={async () => {
+            start();
             if (favourite) {
               await removeFromFavourite(favourite.id);
             } else {
               await addToFavourite({ placeId: place.id });
             }
+
+            stop();
           }}
         >
-          <Heart
-            size={17}
-            strokeWidth={2.5}
-            {...(favourite && { fill: "red" })}
-          />
+          {loading ? (
+            <Loader2 size={17} strokeWidth={2.5} className="animate-spin" />
+          ) : (
+            <Heart
+              size={17}
+              strokeWidth={2.5}
+              {...(favourite && { fill: "red" })}
+            />
+          )}
         </Button>
       </CardFooter>
     </Card>
