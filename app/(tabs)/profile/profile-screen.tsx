@@ -3,14 +3,19 @@
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import { authClient } from "@/lib/auth-client";
+import { UserType } from "@/types/user";
 import { Smile, User2 } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import Avatar, { genConfig } from "react-nice-avatar";
+import Avatar, { AvatarFullConfig, genConfig } from "react-nice-avatar";
 
-export default function ProfileScreen({ name }: { name: string }) {
+export default function ProfileScreen({
+  user,
+}: {
+  user: UserType & { avatar: AvatarFullConfig };
+}) {
   const router = useRouter();
-  const config = genConfig(name);
+  const config = genConfig(user.avatar);
 
   return (
     <div className="space-y-10 py-[calc(40px+env(safe-area-inset-top))] px-5">
@@ -20,7 +25,7 @@ export default function ProfileScreen({ name }: { name: string }) {
           {...config}
           className="border-[1.9px] border-black"
         />
-        <h1 className="text-xl font-semibold truncate">{name}</h1>
+        <h1 className="text-xl font-semibold truncate">{user.name}</h1>
       </div>
       <div className="space-y-2 relative">
         <p className="text-lg font-medium">Account</p>
