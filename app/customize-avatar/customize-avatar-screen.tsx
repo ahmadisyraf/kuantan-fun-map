@@ -32,26 +32,46 @@ import Avatar, {
 import { ButtonGroup, ButtonGroupItem } from "@/components/ui/button-group";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Button } from "@/components/ui/button";
+import { saveAvatar } from "./action";
+import { toastPromise } from "@/components/ui/toast";
 
-export default function CustomizeAvatarScreen() {
+export default function CustomizeAvatarScreen({
+  avatarId,
+  avatar,
+}: {
+  avatar: AvatarFullConfig;
+  avatarId: number;
+}) {
   const [config, setConfig] = useState<AvatarFullConfig | null>(null);
   const router = useRouter();
 
-  const [sex, setSex] = useState<Sex>("man");
-  const [earSize, setEarSize] = useState<EarSize>("small");
-  const [hairStyle, setHairStyle] = useState<HairStyle>("normal");
-  const [hatStyle, setHatStyle] = useState<HatStyle>("none");
-  const [eyeStyle, setEyeStyle] = useState<EyeStyle>("circle");
-  const [glassesStyle, setGlassesStyle] = useState<GlassesStyle>("none");
-  const [noseStyle, setNoseStyle] = useState<NoseStyle>("short");
-  const [mouthStyle, setMouthStyle] = useState<MouthStyle>("smile");
-  const [shirtStyle, setShirtStyle] = useState<ShirtStyle>("hoody");
+  const [sex, setSex] = useState<Sex>(avatar.sex ?? "man");
+  const [earSize, setEarSize] = useState<EarSize>(avatar.earSize ?? "small");
+  const [hairStyle, setHairStyle] = useState<HairStyle>(
+    avatar.hairStyle ?? "normal"
+  );
+  const [hatStyle, setHatStyle] = useState<HatStyle>(avatar.hatStyle ?? "none");
+  const [eyeStyle, setEyeStyle] = useState<EyeStyle>(
+    avatar.eyeStyle ?? "circle"
+  );
+  const [glassesStyle, setGlassesStyle] = useState<GlassesStyle>(
+    avatar.glassesStyle ?? "none"
+  );
+  const [noseStyle, setNoseStyle] = useState<NoseStyle>(
+    avatar.noseStyle ?? "short"
+  );
+  const [mouthStyle, setMouthStyle] = useState<MouthStyle>(
+    avatar.mouthStyle ?? "smile"
+  );
+  const [shirtStyle, setShirtStyle] = useState<ShirtStyle>(
+    avatar.shirtStyle ?? "hoody"
+  );
   const [eyeBrowStyle, setEyeBrowStyle] = useState<EyeBrowStyle>("up");
-  const [bgColor, setBgColor] = useState("#ffffff");
-  const [hairColor, setHairColor] = useState("#000000");
-  const [shirtColor, setShirtColor] = useState("#000000");
-  const [faceColor, setFaceColor] = useState("#F8C9B6");
-  const [hatColor, setHatColor] = useState("#F8C9B6");
+  const [bgColor, setBgColor] = useState(avatar.bgColor ?? "#ffffff");
+  const [hairColor, setHairColor] = useState(avatar.hairColor ?? "#000000");
+  const [shirtColor, setShirtColor] = useState(avatar.shirtColor ?? "#000000");
+  const [faceColor, setFaceColor] = useState(avatar.faceColor ?? "#F8C9B6");
+  const [hatColor, setHatColor] = useState(avatar.hatColor ?? "#F8C9B6");
 
   useEffect(() => {
     const newConfig = genConfig({
@@ -89,6 +109,19 @@ export default function CustomizeAvatarScreen() {
     faceColor,
     hatColor,
   ]);
+
+  const handleSaveAvatar = () => {
+    toastPromise(
+      async () => {
+        await saveAvatar(avatarId, config);
+      },
+      {
+        success: () => "Avatar saved",
+        error: "Something went wrong",
+        loading: "Saving, Please wait",
+      }
+    );
+  };
 
   return (
     <div className="h-dvh pt-[env(safe-area-inset-top)] relative flex flex-col">
@@ -317,7 +350,9 @@ export default function CustomizeAvatarScreen() {
           </TabsContent>
         </Tabs>
 
-        <Button className="w-full">Save</Button>
+        <Button className="w-full" onClick={handleSaveAvatar}>
+          Save
+        </Button>
       </div>
     </div>
   );
