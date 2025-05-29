@@ -6,9 +6,10 @@ export type PlaceType = {
   address: string;
   lat: number;
   lng: number;
-  photos: string[];
+  photos: unknown[];
   category: CategoryType;
   openingHours: string[];
   slug: string;
   url: string;
+  userId: string | null;
 };

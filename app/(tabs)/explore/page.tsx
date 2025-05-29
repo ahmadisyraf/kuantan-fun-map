@@ -16,7 +16,11 @@ export default async function Explore({
     category ? category : "Cafe"
   )) as PlaceType[];
 
-  const favourites = (await getUserFavourites()) as FavouriteType[];
+  const favourites = (await getUserFavourites()) as {
+    place: PlaceType;
+    favourite: FavouriteType;
+  }[];
 
-  return <ExploreScreen {...{ places, favourites }} />;
+  return <ExploreScreen {...{ places, favourites: favourites }} />;
 }
+ 

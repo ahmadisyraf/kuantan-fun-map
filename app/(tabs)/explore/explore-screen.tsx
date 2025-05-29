@@ -28,7 +28,10 @@ export default function ExploreScreen({
   favourites,
 }: {
   places: PlaceType[];
-  favourites: FavouriteType[];
+  favourites: {
+    place: PlaceType;
+    favourite: FavouriteType;
+  }[];
 }) {
   const mapContainer = useRef<HTMLDivElement | null>(null);
   const mapRef = useRef<Map | null>(null);
@@ -42,8 +45,7 @@ export default function ExploreScreen({
   } | null>();
 
   const searchParams = useSearchParams();
-  const categoryParam =
-    searchParams.get("category") || ("Cafe" as CategoryType);
+  const categoryParam = searchParams.get("category") || ("Cafe" as CategoryType);
 
   const renderClusterMarkers = (map: Map) => {
     clusterMarkers.current.forEach((marker) => marker.remove());
@@ -318,8 +320,8 @@ export default function ExploreScreen({
                   setSelectedPlace,
                   setShowCard,
                   favourite: favourites.find(
-                    (favourite) => favourite.placeId === place.id
-                  ),
+                    (favourite) => favourite.place.id === place.id
+                  )?.favourite,
                 }}
               />
             </div>

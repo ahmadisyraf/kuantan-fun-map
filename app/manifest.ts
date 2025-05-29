@@ -22,5 +22,6 @@ export default function manifest(): MetadataRoute.Manifest {
     background_color: "#ffffff",
     display: "standalone",
     orientation: "portrait",
+    start_url: "/sign-in",
   };
 }
