@@ -201,6 +201,7 @@ export default function AddPlaceScreen({
       openingHours: place.opening_hours?.weekday_text || [],
       url: place.url || "",
       slug: "",
+      userId: "",
     };
   };
 
@@ -219,6 +220,7 @@ export default function AddPlaceScreen({
         openingHours: data.openingHours,
         url: data.url,
         slug: "",
+        userId: "",
       });
 
       form.reset();
