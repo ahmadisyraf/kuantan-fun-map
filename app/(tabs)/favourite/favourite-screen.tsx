@@ -11,11 +11,11 @@ interface FavouriteScreenProps {
 
 export default function FavouriteScreen({ favourites }: FavouriteScreenProps) {
   return (
-    <div className="px-5 pt-[env(safe-area-inset-top)]">
+    <div className="px-5 h-full pt-[env(safe-area-inset-top)] relative">
       <div className="p-5 flex items-center justify-center gap-5">
         <h1 className="text-base font-medium">Favourite</h1>
       </div>
-      <div className="py-5 space-y-5 overflow-y-auto no-scrollbar">
+      <div className="py-5 space-y-5 overflow-auto no-scrollbar flex-1">
         {favourites.map((d, index) => (
           <PlaceCard
             {...{ favourite: d.favourite, place: d.place }}
