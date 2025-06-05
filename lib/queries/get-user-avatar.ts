@@ -2,7 +2,7 @@ import { db } from "@/db";
 import { avatar as avatarTable } from "@/db/schema/avatar";
 import { eq } from "drizzle-orm";
 
-async function getAvatar(avatarId: number) {
+async function getUserAvatar(avatarId: number) {
   const avatar = await db
     .select()
     .from(avatarTable)
@@ -11,4 +11,4 @@ async function getAvatar(avatarId: number) {
   return avatar[0];
 }
 
-export { getAvatar };
+export { getUserAvatar };

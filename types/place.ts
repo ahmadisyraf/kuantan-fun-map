@@ -11,4 +11,5 @@ export type PlaceType = {
   openingHours: string[];
   slug: string;
   url: string;
+  userId: string | null;
 };

@@ -4,8 +4,9 @@ import { auth } from "../auth";
 import { headers } from "next/headers";
 import { unstable_cache } from "next/cache";
 import { db } from "@/db";
-import { favourite } from "@/db/schema/favourite";
+import { favourite as favouriteTable } from "@/db/schema/favourite";
 import { eq } from "drizzle-orm";
+import { place as placeTable } from "@/db/schema/place";
 
 async function getUserFavourites() {
   const session = await auth.api.getSession({
@@ -17,9 +18,13 @@ async function getUserFavourites() {
   const favourites = unstable_cache(
     async () => {
       return db
-        .select()
-        .from(favourite)
-        .where(eq(favourite.userId, session.user.id));
+        .select({
+          favourite: favouriteTable,
+          place: placeTable,
+        })
+        .from(favouriteTable)
+        .innerJoin(placeTable, eq(favouriteTable.placeId, placeTable.id))
+        .where(eq(favouriteTable.userId, session.user.id));
     },
     [`favourite:${session.user.id}`],
     {

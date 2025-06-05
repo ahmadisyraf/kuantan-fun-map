@@ -3,8 +3,16 @@ import { eq } from "drizzle-orm";
 import { unstable_cache } from "next/cache";
 import { user as userTable } from "@/db/schema/user";
 import { avatar } from "@/db/schema/avatar";
+import { auth } from "../auth";
+import { headers } from "next/headers";
 
-async function getUser(userId: string) {
+async function getUser() {
+  const session = await auth.api.getSession({
+    headers: await headers(),
+  });
+
+  if (!session) throw new Error("Unauthorized");
+
   const user = await unstable_cache(
     async () => {
       const result = await db
@@ -14,7 +22,7 @@ async function getUser(userId: string) {
         })
         .from(userTable)
         .leftJoin(avatar, eq(userTable.avatarId, avatar.id))
-        .where(eq(userTable.id, userId));
+        .where(eq(userTable.id, session.user.id));
 
       if (result.length === 0) return null;
 
@@ -25,7 +33,7 @@ async function getUser(userId: string) {
         avatar: userAvatar,
       };
     },
-    [`user:${userId}`],
+    [`user:${session.user.id}`],
     {
       tags: ["user"],
     }
